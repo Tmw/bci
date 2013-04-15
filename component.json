@@ -1,7 +1,7 @@
 {
   "name": "bci",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "jquery": "*"
+    "jquery": "~1.9.1"
   }
 }
