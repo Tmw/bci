@@ -37,7 +37,7 @@ module.exports = (grunt) ->
         entry:    './tmp/javascript/main.js'
         compile:  'build/javascript/main.js'
         beforeHook: (bundle) ->
-          shim(bundle, {jQuery: path: './vendor_modules/jquery/jquery.js', exports: 'jQuery'});
+          shim(bundle, {jQuery: path: './components/jquery/jquery.js', exports: 'jQuery'});
 
     sass:
       dist:
