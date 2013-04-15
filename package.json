@@ -10,16 +10,14 @@
     } 
   ],
   "dependencies" : {
+    "bower"                 : "*",
+    "browserify-shim"       : "*",
     "grunt-contrib-coffee"  : "*",
-    "grunt-browserify"      : "*",
+    "grunt-browserify2"     : "*",
     "grunt-contrib-sass"    : "*",
     "grunt-regarde"         : "*",
     "grunt-contrib-connect" : "*",
     "grunt-contrib-haml"    : "*"
-  },
-  "devDependencies": {
-    "vows"    :  "0.5.x",
-    "request" :  "2.1.x"
   },
   "engines": {
     "node": ">=0.10"

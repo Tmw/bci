@@ -1,3 +1,6 @@
+# some libraries need to be shimmed
+shim = require 'browserify-shim'
+
 module.exports = (grunt) ->
 
   grunt.initConfig
@@ -10,7 +13,7 @@ module.exports = (grunt) ->
     regarde:
       coffee:
         files: 'src/coffeescript/**/*.coffee'
-        tasks: ['coffee']
+        tasks: ['buildJS']
       sass:
         files: 'src/stylesheets/**/*.sass'
         tasks: ['sass']
@@ -19,12 +22,22 @@ module.exports = (grunt) ->
         tasks: ['haml']
 
     coffee:
+      options:
+        bare: true
+
       glob_to_multiple:
         expand: true
         cwd: 'src/coffeescript'
         src: ['**/*.coffee']
-        dest: 'build/javascript'
+        dest: 'tmp/javascript'
         ext: '.js'
+
+    browserify2:
+      build:
+        entry:    './tmp/javascript/main.js'
+        compile:  'build/javascript/main.js'
+        beforeHook: (bundle) ->
+          shim(bundle, {jQuery: path: './vendor_modules/jquery/jquery.js', exports: 'jQuery'});
 
     sass:
       dist:
@@ -35,11 +48,13 @@ module.exports = (grunt) ->
         files: 'build/index.html' : 'src/index.haml'
 
   grunt.registerTask 'default', ['build', 'connect', 'regarde']
-  grunt.registerTask 'build', ['coffee', 'sass', 'haml']
+  grunt.registerTask 'buildJS', ['coffee', 'browserify2']
+  grunt.registerTask 'build',   ['buildJS', 'sass', 'haml']
 
   # load NPM modules
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-haml'
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-regarde'
+  grunt.loadNpmTasks 'grunt-browserify2'
   grunt.loadNpmTasks 'grunt-contrib-connect'
