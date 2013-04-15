@@ -17,6 +17,7 @@ To get started, run the following terminal commands:
 * `git clone git@github.com:Tmw/bci.git`
 * `cd bci`
 * `npm install`
+* `bower install`
 
 When that finishes, start the project by running:
 
