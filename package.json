@@ -1,0 +1,27 @@
+{
+  "name": "BCI-WebRTC",
+  "version": "0.0.1",
+  "author": "Tiemen Waterreus <tiemen@tiemenwaterreus.com>",
+  "description": "a simple demonstration of WebRTC",
+  "contributors": [ 
+    {
+      "name": "Tiemen Waterreus",
+      "email": "tiemen@tiemenwaterreus.com"
+    } 
+  ],
+  "dependencies" : {
+    "grunt-contrib-coffee"  : "*",
+    "grunt-browserify"      : "*",
+    "grunt-contrib-sass"    : "*",
+    "grunt-regarde"         : "*",
+    "grunt-contrib-connect" : "*",
+    "grunt-contrib-haml"    : "*"
+  },
+  "devDependencies": {
+    "vows"    :  "0.5.x",
+    "request" :  "2.1.x"
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}
