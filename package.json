@@ -3,21 +3,22 @@
   "version": "0.0.1",
   "author": "Tiemen Waterreus <tiemen@tiemenwaterreus.com>",
   "description": "a simple demonstration of WebRTC",
-  "contributors": [ 
+  "contributors": [
     {
       "name": "Tiemen Waterreus",
       "email": "tiemen@tiemenwaterreus.com"
-    } 
+    }
   ],
-  "dependencies" : {
-    "bower"                 : "*",
-    "browserify-shim"       : "*",
-    "grunt-contrib-coffee"  : "*",
-    "grunt-browserify2"     : "*",
-    "grunt-contrib-sass"    : "*",
-    "grunt-regarde"         : "*",
-    "grunt-contrib-connect" : "*",
-    "grunt-contrib-haml"    : "*"
+  "dependencies": {
+    "bower": "*",
+    "browserify-shim": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-browserify2": "*",
+    "grunt-contrib-sass": "*",
+    "grunt-regarde": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-haml": "*",
+    "express.io": "~1.1.11"
   },
   "engines": {
     "node": ">=0.10"
