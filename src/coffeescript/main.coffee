@@ -1,48 +1,28 @@
 require 'jQuery'
+ConnectionWrapper = require './lib/ConnectionWrapper'
 
 
-servers       = null
-connection    = optional: [RtpDataChannels: true]
-pc1           = new webkitRTCPeerConnection servers, connection
-pc2           = new webkitRTCPeerConnection servers, connection
-sendChannel   = pc1.createDataChannel "sendDataChannel", reliable: false
-receiveChannel = null
+p1 = new ConnectionWrapper
+  onIceCandidate: (event) ->
+    p2.addIceCandidate(event.candidate) if event.candidate
 
-sendChannel.onopen = ->
-  console.log 'sendchannel readystate: ' + sendChannel.readyState
-  sendChannel.send('nice')
-
-sendChannel.onclose = ->
-  console.log 'sendchannel readystate: ' + sendChannel.readyState
-
-pc1.onicecandidate = (event) ->
-  if event.candidate
-    pc2.addIceCandidate event.candidate
-    console.log 'local ICE candidate:' + event.candidate.candidate
-
-pc2.onicecandidate = (event) ->
-  if event.candidate
-    pc1.addIceCandidate event.candidate
-    console.log 'remote ICE candidate:' + event.candidate.candidate
-
-pc1.createOffer (desc) ->
-  pc1.setLocalDescription desc
-  pc2.setRemoteDescription desc
-
-  pc2.createAnswer (desc) ->
-    pc2.setLocalDescription desc
-    pc1.setRemoteDescription desc
-
-sendChannel.onmessage = (event) ->
-  console.log 'OMG! OMG! OMG! HE RESPONDED!' + event.data
-
-pc2.ondatachannel = (event) ->
-  receiveChannel = event.channel
-  receiveChannel.onmessage = (event) ->
-
-    console.log 'ZOMG!!!! I GOT DATA!!: '+ event.data
-    receiveChannel.send('RIGHT BACK AT YA!')
+  onMessage: (event) ->
+    console.log '1 data, lekkah: ', event
 
 
+p2 = new ConnectionWrapper
+  onIceCandidate: (event) ->
+    p1.addIceCandidate(event.candidate) if event.candidate
 
+  onMessage: (event) ->
+    console.log '2 data, lekkah: ', event    
 
+p1.createSession (details) ->
+
+  # we should be able to send the details over XHR
+  detailsJSON = JSON.stringify(details)
+  $("#info").text('Offer : '+ detailsJSON)
+
+  # Pretend we are a different PeerClient
+  p2.joinSession details, (answer) ->
+    p1.handshake answer
