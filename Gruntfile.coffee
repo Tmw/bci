@@ -14,6 +14,9 @@ module.exports = (grunt) ->
       coffee:
         files: 'src/coffeescript/**/*.coffee'
         tasks: ['buildJS']
+      server:
+        files: 'src/server/server.coffee'
+        tasks: ['buildServer']
       sass:
         files: 'src/stylesheets/**/*.sass'
         tasks: ['sass']
@@ -22,15 +25,20 @@ module.exports = (grunt) ->
         tasks: ['haml']
 
     coffee:
-      options:
-        bare: true
+      server:
+        files:
+          'lib/server.js' : 'src/server/server.coffee'
+          
+      assets:
+        options:
+          bare: true
 
-      glob_to_multiple:
-        expand: true
-        cwd: 'src/coffeescript'
-        src: ['**/*.coffee']
-        dest: 'tmp/javascript'
-        ext: '.js'
+        glob_to_multiple:
+          expand: true
+          cwd: 'src/coffeescript'
+          src: ['**/*.coffee']
+          dest: 'tmp/javascript'
+          ext: '.js'
 
     browserify2:
       build:
