@@ -57,6 +57,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'default', ['build', 'connect', 'regarde']
   grunt.registerTask 'buildJS', ['coffee', 'browserify2']
+  grunt.registerTask 'buildServer', ['coffee:server']
   grunt.registerTask 'build',   ['buildJS', 'sass', 'haml']
 
   # load NPM modules
