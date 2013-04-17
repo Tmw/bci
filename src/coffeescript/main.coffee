@@ -1,42 +1,49 @@
 require 'jQuery'
-ConnectionWrapper = require './lib/ConnectionWrapper'
+ConnectionWrapper   = require './lib/ConnectionWrapper'
+WelcomeScreen       = require './screens/welcome'
+PlayerSelectScreen  = require './screens/playerselect'
 
+class _app
+  currentScreen:  null
+  usercollection: []
+  currentState:   'welcome'
+
+  constructor: ->
+    @showScreen new WelcomeScreen()
+
+  showScreen: (screen) ->
+    # close previous view, if available
+    @currentScreen.close() if @currentScreen isnt null
+
+    @currentScreen = screen
+    @currentScreen.show()
+
+  stateChanged: ->
+    switch @currentState
+      when "welcome"
+        @showScreen new WelcomeScreen()
+      when "playerselect"
+        @showScreen new PlayerSelectScreen()
+
+  setState: (state) ->
+    if state isnt @currentState
+      @currentState = state
+      @stateChanged()
+    
+    # setup the dom listeners
+    #@_setupDomListeners()
+
+    #@socket = new io.connect()
+    #@socket.emit 'ready', username: $('[name=username]').val()
+
+    #@socket.on 'data', (data) -> 
+    #  console.log data.sydney
+
+    #connection = new ConnectionWrapper()
+
+
+
+
+# initialize the app when the dom is ready
 $ ->
-  #connection = new ConnectionWrapper()
-
-  $('[name=join]').click ->
-    console.log 'join clicked'
-
-
-
-  $('[name=create]').click ->
-    console.log 'create clicked'
-
-
-
-
-# p1 = new ConnectionWrapper
-#   onIceCandidate: (event) ->
-#     p2.addIceCandidate(event.candidate) if event.candidate
-
-#   onMessage: (event) ->
-#     console.log 'RECEIVED 1: '+ event.data
-#     setTimeout ->
-#       p1.send('yoo.')
-#     , 2000
-
-
-
-# p1.createSession (details) ->
-
-#   # we should be able to send the details over XHR
-#   detailsJSON = JSON.stringify(details)
-#   $("#info").text('Offer : '+ detailsJSON)
-
-#   # Pretend we are a different PeerClient
-#   p2.joinSession details, (answer) ->
-#     p1.handshake answer
-
-# setTimeout ->
-#   p1.send("MOTHAFOCKA!")
-# , 5000
+  window.app = new _app()

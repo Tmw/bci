@@ -7,8 +7,11 @@
     %link{href: 'stylesheets/main.css', rel: 'stylesheet'}
 
   %body
-    %button{name: 'join'}   Join session
-    %button{name: 'create'} Create session
-    %br
-    %br
-    %textarea{name: 'details'}
+    
+    .screen.welcome.hide
+      %input{name: 'username', placeholder: 'Username'}
+      %p Press enter to start the game
+
+    .screen.playerselect.hide
+      %h1 Yo dawgg
+      %p better select a playah before you'll be playin that shit
