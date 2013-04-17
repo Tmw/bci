@@ -13,7 +13,10 @@ module.exports = (grunt) ->
     regarde:
       coffee:
         files: 'src/coffeescript/**/*.coffee'
-        tasks: ['buildJS']
+        tasks: ['buildAssets']
+      server:
+        files: 'src/server/server.coffee'
+        tasks: ['buildServer']
       sass:
         files: 'src/stylesheets/**/*.sass'
         tasks: ['sass']
@@ -24,6 +27,10 @@ module.exports = (grunt) ->
     coffee:
       options:
         bare: true
+
+      server:
+        files:
+          'lib/server.js' : 'src/server/server.coffee'
 
       glob_to_multiple:
         expand: true
@@ -37,7 +44,7 @@ module.exports = (grunt) ->
         entry:    './tmp/javascript/main.js'
         compile:  'build/javascript/main.js'
         beforeHook: (bundle) ->
-          shim(bundle, {jQuery: path: './components/jquery/jquery.js', exports: 'jQuery'});
+          shim(bundle, {jQuery: path: './components/jquery/jquery.js', exports: 'jQuery'})
 
     sass:
       dist:
@@ -47,9 +54,10 @@ module.exports = (grunt) ->
       dist:
         files: 'build/index.html' : 'src/index.haml'
 
-  grunt.registerTask 'default', ['build', 'connect', 'regarde']
-  grunt.registerTask 'buildJS', ['coffee', 'browserify2']
-  grunt.registerTask 'build',   ['buildJS', 'sass', 'haml']
+  grunt.registerTask 'default',     ['build', 'connect', 'regarde']
+  grunt.registerTask 'buildAssets', ['coffee:glob_to_multiple', 'browserify2']
+  grunt.registerTask 'buildServer', ['coffee:server']
+  grunt.registerTask 'build',       ['buildAssets', 'sass', 'haml']
 
   # load NPM modules
   grunt.loadNpmTasks 'grunt-contrib-coffee'
