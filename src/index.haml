@@ -3,6 +3,15 @@
   %head
     %title WebRTC - The game (working name)
     %script{src: 'javascript/main.js'}
+    %script{src: 'socket.io/socket.io.js'}
     %link{href: 'stylesheets/main.css', rel: 'stylesheet'}
+
   %body
-    %span#info nothing happened
+    
+    .screen.welcome.hide
+      %input{name: 'username', placeholder: 'Username'}
+      %p Press enter to start the game
+
+    .screen.playerselect.hide
+      %h1 Yo dawgg
+      %p better select a playah before you'll be playin that shit
