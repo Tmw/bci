@@ -1,12 +1,14 @@
 require 'jQuery'
-ConnectionWrapper   = require './lib/ConnectionWrapper'
+ConnectionWrapper   = require './lib/connectionwrapper'
 WelcomeScreen       = require './screens/welcome'
 PlayerSelectScreen  = require './screens/playerselect'
+UserModel           = require './models/user'
 
 class _app
   currentScreen:  null
   usercollection: []
   currentState:   'welcome'
+  CurrentPlayer:   new UserModel()
 
   constructor: ->
     @showScreen new WelcomeScreen()
@@ -22,10 +24,11 @@ class _app
     switch @currentState
       when "welcome"
         @showScreen new WelcomeScreen()
+        
       when "playerselect"
         @showScreen new PlayerSelectScreen()
 
-  setState: (state) ->
+  transitionToState: (state, date=null) ->
     if state isnt @currentState
       @currentState = state
       @stateChanged()
@@ -46,4 +49,4 @@ class _app
 
 # initialize the app when the dom is ready
 $ ->
-  window.app = new _app()
+  window.App = new _app()

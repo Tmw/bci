@@ -10,5 +10,12 @@ module.exports = class Welcome extends Screen
     $('[name=username]').focus()
 
   _onKeyDown: (e) ->
+    # if return key is pressed, set username in model
+    # and transition to new state
+
     if e.keyCode is 13
-      console.log 'Username filled with '+ $('[name=username]').val()
+      val = $('[name=username]').val()
+      if val.length > 0
+        App.CurrentPlayer.set('username', val)
+        App.transitionToState('playerselect')
+        

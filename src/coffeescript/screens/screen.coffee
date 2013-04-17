@@ -12,7 +12,13 @@ module.exports = class Screen
     $(@screen).addClass 'hide'
     @onClose() if @onClose
 
+  # shamelessly stolen from Backbone
   _bindEvents: ->
-    for key in Object.keys(@events)
-      [event, context] = key.split ' '
-      $(context).on event, @[@events[key]]
+    if @events
+      for key in Object.keys(@events)
+        [event, context] = key.split ' '
+        $(context).on event, @[@events[key]]
+
+  # also stolen from Backbone :D
+  $: (selector)->
+    window.jQuery(@screen).find(selector)
