@@ -13,7 +13,7 @@ module.exports = class UserCollection
     index = 0
     while index < @_users.length
       if @_users[index].id = user.id
-        @_users.splice index, 1
+        @_users.splice index+1, 1
       index++
 
   addUser: (user) ->
