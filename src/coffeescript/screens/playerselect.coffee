@@ -12,10 +12,8 @@ module.exports = class PlayerSelect extends Screen
 
   _collectionChanged: =>
     # begin with a empty list
-    list = @$('[name=players]')
-    list.empty()
-
+    list = @$('[name=players]').empty()
 
     users = App.UserCollection.getUsers()
     for user in users
-      list.append "<li>#{user.username}</li>"
+      list.append "<li data-userid=\"#{user.id}\">#{user.username}</li>"
