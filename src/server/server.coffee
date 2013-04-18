@@ -25,7 +25,13 @@ app.listen 8080
 # TODO: seriously refactor this!
 ### ###############
 
-
+findPlayerWithId = (id, callback) ->
+  index = 0
+  while index < playerIDs.length
+    player = playerIDs[index]
+    if player.id is id
+      callback player
+    index++
 
 
 # if a connection accoured
@@ -48,6 +54,13 @@ app.io.route 'subscribe', (req) ->
 
   # send back a list of already present users
   req.io.emit 'users:list', JSON.stringify(playerIDs)
+
+  req.socket.on 'users:challenge:new', (data) ->
+    user    = JSON.parse data
+    socket  = playerSockets[user.id]
+
+    findPlayerWithId user.id, (player) ->
+      socket.emit 'users:challenge:new', JSON.stringify(player)
 
   req.socket.on 'disconnect', ->
     # get ID of socket
