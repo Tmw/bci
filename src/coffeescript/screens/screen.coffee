@@ -17,7 +17,7 @@ module.exports = class Screen
     if @events
       for key in Object.keys(@events)
         [event, context] = key.split ' '
-        $(context).on event, @[@events[key]]
+        $(@screen).on event, context, @[@events[key]]
 
   # also stolen from Backbone :D
   $: (selector)->
