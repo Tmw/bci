@@ -16,20 +16,20 @@ module.exports = class UserCollection
         @_users.splice index, 1
       index++
 
+  addUser: (user) ->
+    @_users.push user
+
   getUsers: ->
     return @_users
 
   _handleUserList: (data) =>
     @_users = JSON.parse(data)
-    console.log @_users
     @_onChangeCallback() if @_onChangeCallback
 
   _handleUserAdd: (data) =>
-    @_users.push(JSON.parse(data))
+    @addUser JSON.parse(data)
     @_onChangeCallback() if @_onChangeCallback
-    console.log @_users
 
   _handleUserRemove: (data) =>
     @removeUser JSON.parse(data)
-    console.log @_users
     @_onChangeCallback() if @_onChangeCallback

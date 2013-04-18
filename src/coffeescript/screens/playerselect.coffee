@@ -7,12 +7,15 @@ module.exports = class PlayerSelect extends Screen
     App.UserCollection.setOnchangeHandler @_collectionChanged
 
   onShow: ->
-    @$('[name=username]').text(App.CurrentPlayer.get('username'))
+    header = "Welcome, #{App.CurrentPlayer.get('username')}!"
+    @$('[name=welcome]').text(header)
 
   _collectionChanged: =>
-    console.log 'collection changed'
-    @$('[name=playah]').empty()
+    # begin with a empty list
+    list = @$('[name=players]')
+    list.empty()
+
 
     users = App.UserCollection.getUsers()
     for user in users
-      @$('[name=playah]').append user.username
+      list.append "<li>#{user.username}</li>"
