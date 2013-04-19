@@ -17,8 +17,8 @@ module.exports = class PlayerSelect extends Screen
     # begin with a empty list
     list = @$('[name=players]').empty()
 
-    users = App.UserCollection.getUsers()
-    for user in users
+    # render users
+    for user in App.UserCollection.all()
       list.append "<li data-userid=\"#{user.id}\">#{user.username}</li>"
 
   _userClicked: (e) ->

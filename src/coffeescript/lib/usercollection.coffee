@@ -1,5 +1,5 @@
-module.exports = class UserCollection
-  _users: []
+BaseCollection = require './base_collection'
+module.exports = class UserCollection extends BaseCollection
 
   constructor: ->
     App.Socket.on 'users:list',             @_handleUserList
@@ -8,35 +8,20 @@ module.exports = class UserCollection
     App.Socket.on 'users:challenge:new',    @_handleChallenge
     App.Socket.on 'users:challenge:finish', @_handleCompleteHandshake
 
+    # this needs to go in the main.coffe
     App.Connection.setOnChangeCallback (event) ->
       console.log 'onChangeCallback fired: ', event
       App.Connection.send "Hello, via DataChannel!"
 
+    # this is only really important in the game screen
     App.Connection.setOnDataCallback (event) ->
       console.log 'Yay! data: ', event.data
 
   setOnchangeHandler: (cb) ->
     @_onChangeCallback = cb
 
-  removeUser: (user) ->
-    index = 0
-    while index < @_users.length
-      if @_users[index].id is user.id
-        @_users.splice index+1, 1
-      index++
-
-  addUser: (user) ->
-    @_users.push user
-
-  getUserById: (id) ->
-    index = 0
-    while index < @_users.length
-      if @_users[index].id is id
-        return @_users[index]
-      index++    
-
   challangeUser: (userId) ->
-    user = @getUserById userId
+    user = @find userId
     App.Connection.createSession (handshake) ->
       packet = JSON.stringify('user':user, 'from': App.CurrentPlayer, 'handshake':handshake)
       App.Socket.emit 'users:challenge:new', packet
@@ -45,15 +30,15 @@ module.exports = class UserCollection
     return @_users
 
   _handleUserList: (data) =>
-    @_users = JSON.parse(data)
+    @reset JSON.parse(data)
     @_onChangeCallback() if @_onChangeCallback
 
   _handleUserAdd: (data) =>
-    @addUser JSON.parse(data)
+    @add JSON.parse(data)
     @_onChangeCallback() if @_onChangeCallback
 
   _handleUserRemove: (data) =>
-    @removeUser JSON.parse(data)
+    @remove JSON.parse(data)
     @_onChangeCallback() if @_onChangeCallback
 
   _handleChallenge: (data) =>
