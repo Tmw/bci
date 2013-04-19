@@ -6,6 +6,7 @@ module.exports = class PlayerSelect extends Screen
 
   initialize: ->
     App.Socket.emit 'subscribe', username: App.CurrentPlayer.get('username')
+    App.CurrentPlayer.set('id', App.Socket.socket.sessionid)
     App.UserCollection.setOnchangeHandler @_collectionChanged
 
   onShow: ->

@@ -6,3 +6,5 @@ module.exports = class User
 
   get: (key) ->
     return @attributes[key]
+
+  toJSON: -> @attributes
