@@ -56,11 +56,24 @@ app.io.route 'subscribe', (req) ->
   req.io.emit 'users:list', JSON.stringify(playerIDs)
 
   req.socket.on 'users:challenge:new', (data) ->
-    user    = JSON.parse data
-    socket  = playerSockets[user.id]
+    console.log 'new data', data
+    dataobj = JSON.parse data
+    socket  = playerSockets[dataobj.user.id]
 
-    findPlayerWithId user.id, (player) ->
-      socket.emit 'users:challenge:new', JSON.stringify(player)
+    findPlayerWithId dataobj.user.id, (player) ->
+      packet = JSON.stringify('user':player, 'from':dataobj.from, 'handshake':dataobj.handshake)
+      socket.emit 'users:challenge:new', packet
+
+  req.socket.on 'users:challenge:finish', (data) ->
+    console.log 'finish data', data
+    dataobj = JSON.parse data
+    socket  = playerSockets[dataobj.user.id]
+
+    findPlayerWithId dataobj.user.id, (player) ->
+      packet = JSON.stringify('user':player, 'handshake':dataobj.handshake)
+      socket.emit 'users:challenge:finish', packet
+
+
 
   req.socket.on 'disconnect', ->
     # get ID of socket

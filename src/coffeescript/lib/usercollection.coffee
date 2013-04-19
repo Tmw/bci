@@ -2,10 +2,18 @@ module.exports = class UserCollection
   _users: []
 
   constructor: ->
-    App.Socket.on 'users:list',           @_handleUserList
-    App.Socket.on 'users:add',            @_handleUserAdd
-    App.Socket.on 'users:remove',         @_handleUserRemove
-    App.Socket.on 'users:challange:new',  @_handleChallenge
+    App.Socket.on 'users:list',             @_handleUserList
+    App.Socket.on 'users:add',              @_handleUserAdd
+    App.Socket.on 'users:remove',           @_handleUserRemove
+    App.Socket.on 'users:challenge:new',    @_handleChallenge
+    App.Socket.on 'users:challenge:finish', @_handleCompleteHandshake
+
+    App.Connection.setOnChangeCallback (event) ->
+      console.log 'onChangeCallback fired: ', event
+      App.Connection.send "Hello, via DataChannel!"
+
+    App.Connection.setOnDataCallback (event) ->
+      console.log 'Yay! data: ', event.data
 
   setOnchangeHandler: (cb) ->
     @_onChangeCallback = cb
@@ -29,7 +37,9 @@ module.exports = class UserCollection
 
   challangeUser: (userId) ->
     user = @getUserById userId
-    App.Socket.emit 'users:challenge:new', JSON.stringify(user)
+    App.Connection.createSession (handshake) ->
+      packet = JSON.stringify('user':user, 'from': App.CurrentPlayer, 'handshake':handshake)
+      App.Socket.emit 'users:challenge:new', packet
 
   getUsers: ->
     return @_users
@@ -47,8 +57,18 @@ module.exports = class UserCollection
     @_onChangeCallback() if @_onChangeCallback
 
   _handleChallenge: (data) =>
-    user = JSON.parse data
-    c = confirm "#{user.username} would like to challenge you. Accept?"
+    dataobj = JSON.parse data
+    c = confirm "#{dataobj.from.username} would like to challenge you. Accept?"
+    if c
+      App.Connection.handleOffer data, (handshake) ->
+        packet = JSON.stringify('user':dataobj.from, 'from': App.CurrentPlayer, 'handshake':handshake)
+        App.Socket.emit 'users:challenge:finish', packet
+    else
+      # we should probably inform the other player of its rejection.. :)
+
+  _handleCompleteHandshake: (answer) =>
+    # to complete the handshake
+    App.Connection.handleAnswer(answer)
 
 
 

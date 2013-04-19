@@ -13,10 +13,13 @@ class _app
   constructor: ->
     
   start: ->
-    @showScreen new WelcomeScreen()
     @Socket         = new io.connect()
+    @Connection     = new ConnectionWrapper()
     @UserCollection = new UserCollection()
-    #@connection = new ConnectionWrapper()
+    
+
+    @showScreen new WelcomeScreen()
+    
 
   showScreen: (screen) ->
     # close previous view, if available and show new screen
