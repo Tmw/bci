@@ -1,13 +1,27 @@
+require 'createjs'
 Screen  = require './screen'
-Easel   = require 'createjs'
 module.exports = class Game extends Screen
   screen: '.game'
   #events:
 
   initialize: ->
-    console.log  Createjs
+
 
   onShow: ->
-    console.log 'lekkah'
-    # header = "Welcome, #{App.CurrentPlayer.get('username')}!"
-    # @$('[name=welcome]').text(header)
+    console.log 'ok'
+
+    @stage   = new createjs.Stage('canvas')
+    @circle  = new createjs.Shape()
+
+    @circle.graphics.beginFill("red").drawCircle(0, 0, 40)
+
+    @circle.x = @circle.y = 50
+    @stage.addChild(@circle)
+    @stage.update()
+
+    createjs.Ticker.addListener(@)
+
+  tick: =>
+    @circle.x += 1
+    @stage.update()
+

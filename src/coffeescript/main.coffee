@@ -8,7 +8,7 @@ GameScreen          = require './screens/game'
 
 class _app
   Connection:     null
-  currentState:   'welcome'
+  currentState:   'game'  #TODO: Set this to welcome when were done
   CurrentPlayer:  new UserModel()
 
   constructor: ->
@@ -18,8 +18,8 @@ class _app
     @Connection     = new ConnectionWrapper()
     @UserCollection = new UserCollection()
     
-
-    @showScreen new WelcomeScreen()
+    # transition to first screen
+    @stateChanged()
     
 
   showScreen: (screen) ->

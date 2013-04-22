@@ -54,7 +54,7 @@ module.exports = (grunt) ->
           'dist/stylesheets/main.css' : 'src/stylesheets/main.sass'
     haml:
       dist:
-        files: 'build/index.html' : 'src/index.haml'
+        files: 'dist/index.html' : 'src/index.haml'
 
   grunt.registerTask 'default',     ['build', 'connect', 'regarde']
   grunt.registerTask 'buildAssets', ['coffee:glob_to_multiple', 'browserify2']
