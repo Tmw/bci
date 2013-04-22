@@ -36,7 +36,10 @@ class _app
       when "playerselect"
         @showScreen new PlayerSelectScreen()
 
-  transitionToState: (state, date=null) ->
+      when "game"
+        @showScreen new GameScreen()
+
+  transitionToState: (state) ->
     if state isnt @currentState
       @currentState = state
       @stateChanged()

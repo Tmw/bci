@@ -12,8 +12,7 @@ module.exports = class UserCollection extends BaseCollection
 
     # this needs to go in the main.coffe
     App.Connection.setOnChangeCallback (event) ->
-      console.log 'onChangeCallback fired: ', event
-      App.Connection.send "Hello, via DataChannel!"
+      App.transitionToState 'game'
 
     # this is only really important in the game screen
     App.Connection.setOnDataCallback (event) ->

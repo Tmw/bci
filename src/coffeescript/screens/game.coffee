@@ -5,7 +5,7 @@ module.exports = class Game extends Screen
   #events:
 
   initialize: ->
-    console.log  Easel
+    console.log  Createjs
 
   onShow: ->
     console.log 'lekkah'
