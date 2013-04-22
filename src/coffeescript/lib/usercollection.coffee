@@ -31,7 +31,7 @@ module.exports = class UserCollection extends BaseCollection
   _toModels: (data) ->
     out = []
     for item in data
-      out.push new UserModel itm
+      out.push new UserModel item
 
     return out
 

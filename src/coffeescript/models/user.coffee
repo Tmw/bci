@@ -6,10 +6,7 @@ module.exports = class User
       if typeof json is "string"
         @_attributes = JSON.parse(json)
       else if typeof json is "object"
-        console.log json
         @_attributes = json
-
-      console.log 'model created: ', @
 
   set: (key, value) ->
     @_attributes[key] = value
