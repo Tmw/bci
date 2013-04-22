@@ -19,7 +19,8 @@ module.exports = class PlayerSelect extends Screen
 
     # render users
     for user in App.UserCollection.all()
-      list.append "<li data-userid=\"#{user.id}\">#{user.username}</li>"
+      console.log 'itrate ', user
+      list.append "<li data-userid=\"#{user.get('id')}\">#{user.get('username')}</li>"
 
   _userClicked: (e) ->
     userId = $(e.currentTarget).data('userid')

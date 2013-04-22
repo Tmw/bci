@@ -1,4 +1,6 @@
 BaseCollection = require './base_collection'
+UserModel      = require '../models/user'
+
 module.exports = class UserCollection extends BaseCollection
 
   constructor: ->
@@ -26,19 +28,23 @@ module.exports = class UserCollection extends BaseCollection
       packet = JSON.stringify('user':user, 'from': App.CurrentPlayer, 'handshake':handshake)
       App.Socket.emit 'users:challenge:new', packet
 
-  getUsers: ->
-    return @_users
+  _toModels: (data) ->
+    out = []
+    for item in data
+      out.push new UserModel itm
+
+    return out
 
   _handleUserList: (data) =>
-    @reset JSON.parse(data)
+    @reset @_toModels JSON.parse(data)
     @_onChangeCallback() if @_onChangeCallback
 
   _handleUserAdd: (data) =>
-    @add JSON.parse(data)
+    @add new UserModel(data)
     @_onChangeCallback() if @_onChangeCallback
 
   _handleUserRemove: (data) =>
-    @remove JSON.parse(data)
+    @removeWithId JSON.parse(data).id
     @_onChangeCallback() if @_onChangeCallback
 
   _handleChallenge: (data) =>
