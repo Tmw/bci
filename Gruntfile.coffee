@@ -46,6 +46,7 @@ module.exports = (grunt) ->
         compile:  'dist/javascript/main.js'
         beforeHook: (bundle) ->
           shim(bundle, {jQuery: path: './components/jquery/jquery.js', exports: 'jQuery'})
+          shim(bundle, {createjs: path: './components/easel/easeljs.js', exports: 'createjs'})
 
     sass:
       dist:
