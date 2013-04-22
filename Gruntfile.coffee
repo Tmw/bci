@@ -15,7 +15,7 @@ module.exports = (grunt) ->
         files: 'src/coffeescript/**/*.coffee'
         tasks: ['buildAssets']
       server:
-        files: 'src/server/server.coffee'
+        files: 'src/server/*.coffee'
         tasks: ['buildServer']
       sass:
         files: 'src/stylesheets/**/*.sass'
@@ -30,19 +30,20 @@ module.exports = (grunt) ->
 
       server:
         files:
-          'lib/server.js' : 'src/server/server.coffee'
+          'build/server/server.js'          : 'src/server/server.coffee'
+          'build/server/user_collection.js' : 'src/server/user_collection.coffee'
 
       glob_to_multiple:
         expand: true
         cwd: 'src/coffeescript'
         src: ['**/*.coffee']
-        dest: 'tmp/javascript'
+        dest: 'build/javascript'
         ext: '.js'
 
     browserify2:
       build:
-        entry:    './tmp/javascript/main.js'
-        compile:  'build/javascript/main.js'
+        entry:    './build/javascript/main.js'
+        compile:  'dist/javascript/main.js'
         beforeHook: (bundle) ->
           shim(bundle, {jQuery: path: './components/jquery/jquery.js', exports: 'jQuery'})
 
