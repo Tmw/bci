@@ -42,20 +42,21 @@ module.exports = class UserCollection extends BaseCollection
     # inform others the user has left
     req.io.room('users').broadcast('users:remove', JSON.stringify(user))
 
-  _handleNewChallange: (data) ->
-      dataobj = JSON.parse data
-      user    = @find(dataobj.id)
-      socket  = user.get('socket')
-
-      packet = JSON.stringify('user':player, 'from':dataobj.from, 'handshake':dataobj.handshake)
-      socket.emit 'users:challenge:new', packet
+  _handleNewChallange: (data) =>
+    dataobj = JSON.parse data
+    user    = @find(dataobj.user.id)
+    socket  = user.get('socket')
+    packet  = JSON.stringify('user':user, 'from':dataobj.from, 'handshake':dataobj.handshake)
+    socket.emit 'users:challenge:new', packet
 
     # handshake complete
-  _handleHandshakeComplete: (data) ->
-      console.log 'finish data', data
+  _handleHandshakeComplete: (data) =>
       dataobj = JSON.parse data
-      socket  = playerSockets[dataobj.user.id]
+      user    = @find(dataobj.user.id)
+      socket  = user.get('socket')
+      packet  = JSON.stringify('user':user, 'handshake':dataobj.handshake)
+      socket.emit 'users:challenge:finish', packet
 
-      findPlayerWithId dataobj.user.id, (player) ->
-        packet = JSON.stringify('user':player, 'handshake':dataobj.handshake)
-        socket.emit 'users:challenge:finish', packet
+
+
+
