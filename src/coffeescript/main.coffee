@@ -4,6 +4,7 @@ UserCollection      = require './lib/usercollection'
 UserModel           = require './models/user'
 WelcomeScreen       = require './screens/welcome'
 PlayerSelectScreen  = require './screens/playerselect'
+GameScreen          = require './screens/game'
 
 class _app
   Connection:     null
