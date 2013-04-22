@@ -1,11 +1,13 @@
 require 'createjs'
 Screen  = require './screen'
+KeyboardHandler = require '../lib/KeyboardHandler'
+
 module.exports = class Game extends Screen
   screen: '.game'
   #events:
 
   initialize: ->
-
+    createjs.Ticker.setFPS 60
 
   onShow: ->
     console.log 'ok'
@@ -18,10 +20,19 @@ module.exports = class Game extends Screen
     @circle.x = @circle.y = 50
     @stage.addChild(@circle)
     @stage.update()
-
     createjs.Ticker.addListener(@)
 
-  tick: =>
-    @circle.x += 1
-    @stage.update()
+    @velocity = new createjs.Point(0,0)
 
+  tick: =>
+    if KeyboardHandler.RightArrow
+      @velocity.x +=1 if @velocity.x < 5
+    else if KeyboardHandler.LeftArrow
+      @velocity.x -=1 if @velocity.x > -5
+
+    # actual moving
+    @circle.x += @velocity.x
+    @circle.y += @velocity.y
+
+
+    @stage.update()
