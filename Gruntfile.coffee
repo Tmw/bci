@@ -50,7 +50,7 @@ module.exports = (grunt) ->
     sass:
       dist:
         files:
-          'build/stylesheets/main.css' : 'src/stylesheets/main.sass'
+          'dist/stylesheets/main.css' : 'src/stylesheets/main.sass'
     haml:
       dist:
         files: 'build/index.html' : 'src/index.haml'
