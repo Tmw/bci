@@ -6,6 +6,7 @@ module.exports = class Player extends createjs.Shape
 
   constructor: (@color) ->
     super
+
     @graphics.beginFill("#ffcc00").drawCircle(0, 0, 5)
     createjs.Ticker.addListener(@)
 
@@ -13,19 +14,15 @@ module.exports = class Player extends createjs.Shape
     @x = @y = 10
 
   tick: =>
-    # if KeyboardHandler.RightArrow and @velocity.x < 5 and @velocity.x >= 0
-    #   @velocity.x +=1
-    # else if not KeyboardHandler.RightArrow and @velocity.x >= 0 and @velocity.x < 5
-    #   @velocity.x -=1
 
+    # movement X-axis
+    if KeyboardHandler.RightArrow then @velocity.x += 1
+    if KeyboardHandler.LeftArrow  then @velocity.x -= 1
 
-    # if KeyboardHandler.LeftArrow and @velocity > -5 and @velocity.x < 0
-    #   @velocity.x -=1
-    # else if not KeyboardHandler.LeftArrow and @velocity.x < 0 and @velocity.x > -5
-    #   @velocity.x +=1
-
-    console.log @velocity.x
-
+    # return to zero X-velocity
+    unless KeyboardHandler.RightArrow or KeyboardHandler.LeftArrow
+      if @velocity.x > 0 then @velocity.x -=1
+      if @velocity.x < 0 then @velocity.x +=1
 
     #actual moving
     @x += @velocity.x
