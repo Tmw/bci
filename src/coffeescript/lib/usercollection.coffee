@@ -10,14 +10,6 @@ module.exports = class UserCollection extends BaseCollection
     App.Socket.on 'users:challenge:new',    @_handleChallenge
     App.Socket.on 'users:challenge:finish', @_handleCompleteHandshake
 
-    # this needs to go in the main.coffe
-    App.Connection.setOnChangeCallback (event) ->
-      App.transitionToState 'game'
-
-    # this is only really important in the game screen
-    App.Connection.setOnDataCallback (event) ->
-      console.log 'Yay! data: ', event.data
-
   setOnchangeHandler: (cb) ->
     @_onChangeCallback = cb
 

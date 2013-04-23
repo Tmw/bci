@@ -26,9 +26,7 @@ module.exports = class ConnectionWrapper
     @_createOffer()
 
   send: (msg) ->
-    console.log 'sending a mesage?'
     if @dataChannel.readyState is "open"
-      console.log 'yes. Still sending the message'
       @dataChannel.send(msg)
 
   # when the handshake completes, handle the answer
@@ -85,7 +83,6 @@ module.exports = class ConnectionWrapper
     @_dcOnChangeCallback(event) if @_dcOnChangeCallback
 
   _channelDataReceived: (event) =>
-    console.log 'got data!', event
     @_dcOnDataCallback(event) if @_dcOnDataCallback
 
   _onIceCandidate: (event) =>
