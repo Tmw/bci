@@ -1,5 +1,6 @@
 require 'createjs'
 KeyboardHandler = require '../lib/KeyboardHandler'
+RealtimeManager = require '../lib/RealtimeManager'
 
 module.exports = class Player extends createjs.Shape
   baseColor: '#000'
@@ -7,13 +8,23 @@ module.exports = class Player extends createjs.Shape
   constructor: (@color) ->
     super
 
-    @graphics.beginFill("#FF0000").drawCircle(0, 0, 5)
+    @graphics.beginFill(@color).drawCircle(0, 0, 5)
     createjs.Ticker.addListener(@)
 
     @velocity = new createjs.Point(0,0)
     @x = @y = 10
 
+
   tick: =>
+    @_move()
+
+    unless @velocity.x is 0 and @velocity.y is 0
+      @_syncPosition()
+
+  _syncPosition: ->
+    App.RealtimeManager.sendLocation x:@x, y:@y
+
+  _move: ->
     movement_max = 10
 
     # movement X-axis
@@ -23,7 +34,6 @@ module.exports = class Player extends createjs.Shape
     # movement Y-axis
     if KeyboardHandler.UpArrow    and @velocity.y > 0-movement_max   then @velocity.y -= 1
     if KeyboardHandler.DownArrow  and @velocity.y < movement_max then @velocity.y += 1
-
 
     # return to zero X-velocity
     unless KeyboardHandler.RightArrow or KeyboardHandler.LeftArrow
