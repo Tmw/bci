@@ -2,6 +2,7 @@ require 'createjs'
 Screen          = require './screen'
 KeyboardHandler = require '../lib/KeyboardHandler'
 Player          = require '../game/player'
+Opponent        = require '../game/opponent'
 
 module.exports = class Game extends Screen
   screen: '.game'
@@ -10,14 +11,14 @@ module.exports = class Game extends Screen
     createjs.Ticker.setFPS 60
     createjs.Ticker.addListener(@)
 
-    @stage   = new createjs.Stage('canvas')
+    @stage    = new createjs.Stage('canvas')
 
   onShow: ->
-    @playerX = new Player('#ff0000')
+    @you      = new Player('#FF0000')
+    @opponent = new Opponent('#0000FF')
 
-    @stage.addChild(@playerX)
-    @stage.update()
-    
+    @stage.addChild(@you)
+    @stage.addChild(@opponent)
 
   tick: =>
     @stage.update()

@@ -5,22 +5,27 @@ UserModel           = require './models/user'
 WelcomeScreen       = require './screens/welcome'
 PlayerSelectScreen  = require './screens/playerselect'
 GameScreen          = require './screens/game'
+RealtimeManager     = require './lib/RealtimeManager'
 
 class _app
   Connection:     null
-  currentState:   'game'  #TODO: Set this to welcome when were done
+  currentState:   'welcome'
   CurrentPlayer:  new UserModel()
 
   constructor: ->
     
   start: ->
-    @Socket         = new io.connect()
-    @Connection     = new ConnectionWrapper()
-    @UserCollection = new UserCollection()
+    @Socket           = new io.connect()
+    @Connection       = new ConnectionWrapper()
+    @UserCollection   = new UserCollection()
+    @RealtimeManager  = new RealtimeManager()
     
+    # When a connection is made, transition to game screen
+    App.Connection.setOnChangeCallback (event) =>
+      @transitionToState 'game'
+
     # transition to first screen
     @stateChanged()
-    
 
   showScreen: (screen) ->
     # close previous view, if available and show new screen
