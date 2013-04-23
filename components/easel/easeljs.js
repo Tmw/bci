@@ -133,3 +133,1314 @@ a.preventDefault&&a.preventDefault();for(var c=a.changedTouches,g=a.type,d=0,e=c
 m,!1);window.addEventListener("MSPointerCancel",m,!1);b.__touch.preventDefault&&(a.style.msTouchAction="none");b.__touch.activeIDs={}};c._IE_disable=function(b){var a=b.__touch.f;window.removeEventListener("MSPointerMove",a,!1);window.removeEventListener("MSPointerUp",a,!1);window.removeEventListener("MSPointerCancel",a,!1);b.canvas&&b.canvas.removeEventListener("MSPointerDown",a,!1)};c._IE_handleEvent=function(b,a){if(b){b.__touch.preventDefault&&a.preventDefault&&a.preventDefault();var c=a.type,
 g=a.pointerId,d=b.__touch.activeIDs;if("MSPointerDown"==c)a.srcElement==b.canvas&&(d[g]=!0,this._handleStart(b,g,a,a.pageX,a.pageY));else if(d[g])if("MSPointerMove"==c)this._handleMove(b,g,a,a.pageX,a.pageY);else if("MSPointerUp"==c||"MSPointerCancel"==c)delete d[g],this._handleEnd(b,g,a)}};c._handleStart=function(b,a,c,g,d){var e=b.__touch;if(e.multitouch||!e.count){var f=e.pointers;f[a]||(f[a]=!0,e.count++,b._handlePointerDown(a,c,g,d))}};c._handleMove=function(b,a,c,g,d){b.__touch.pointers[a]&&
 b._handlePointerMove(a,c,g,d)};c._handleEnd=function(b,a,c){var g=b.__touch,d=g.pointers;d[a]&&(g.count--,b._handlePointerUp(a,c,!0),delete d[a])};createjs.Touch=c})();(function(){var c=this.createjs=this.createjs||{},c=c.EaselJS=c.EaselJS||{};c.version="0.6.0";c.buildDate="Tue, 12 Feb 2013 21:12:22 GMT"})();
+/*
+* Filter
+* Visit http://createjs.com/ for documentation, updates and examples.
+*
+* Copyright (c) 2010 gskinner.com, inc.
+* 
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// namespace:
+this.createjs = this.createjs||{};
+
+(function() {
+
+/**
+ * Base class that all filters should inherit from. Filters need to be applied to objects that have been cached using
+ * the {{#crossLink "DisplayObject/cache"}}{{/crossLink}} method. If an object changes, please cache it again, or use
+ * {{#crossLink "DisplayObject/updateCache"}}{{/crossLink}}.
+ *
+ * <h4>Example</h4>
+ *      myInstance.cache(0,0, 100, 100);
+ *      myInstance.filters = [
+ *          new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 0),
+ *          new createjs.BoxBlurFilter(5, 5, 10)
+ *      ];
+ *
+ * <h4>EaselJS Filters</h4>
+ * EaselJS comes with a number of pre-built filters. Note that individual filters are not compiled into the minified
+ * version of EaselJS. To use them, you must include them manually in the HTML.
+ * <ul><li>AlphaMapFilter: Map a greyscale image to the alpha channel of a display object</li>
+ *      <li>{{#crossLink "AlphaMapFilter"}}{{/crossLink}}: Map an image's alpha channel to the alpha channel of a display object</li>
+ *      <li>{{#crossLink "BoxBlurFilter"}}{{/crossLink}}: Apply vertical and horizontal blur to a display object</li>
+ *      <li>{{#crossLink "ColorFilter"}}{{/crossLink}}: Color transform a display object</li>
+ *      <li>{{#crossLink "ColorMatrixFilter"}}{{/crossLink}}: Transform an image using a {{#crossLink "ColorMatrix"}}{{/crossLink}}</li>
+ * </ul>
+ *
+ * @class Filter
+ * @constructor
+ **/
+var Filter = function() {
+  this.initialize();
+}
+var p = Filter.prototype;
+  
+// constructor:
+  /** 
+   * Initialization method.
+   * @method initialize
+   * @protected
+   **/
+  p.initialize = function() {}
+  
+// public methods:
+  /**
+   * Returns a rectangle with values indicating the margins required to draw the filter.
+   * For example, a filter that will extend the drawing area 4 pixels to the left, and 7 pixels to the right
+   * (but no pixels up or down) would return a rectangle with (x=-4, y=0, width=11, height=0).
+   * @method getBounds
+   * @return {Rectangle} a rectangle object indicating the margins required to draw the filter.
+   **/
+  p.getBounds = function() {
+    return new createjs.Rectangle(0,0,0,0);
+  }
+  
+  /**
+   * Applies the filter to the specified context.
+   * @method applyFilter
+   * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
+   * @param {Number} x The x position to use for the source rect.
+   * @param {Number} y The y position to use for the source rect.
+   * @param {Number} width The width to use for the source rect.
+   * @param {Number} height The height to use for the source rect.
+   * @param {CanvasRenderingContext2D} targetCtx Optional. The 2D context to draw the result to. Defaults to the context passed to ctx.
+   * @param {Number} targetX Optional. The x position to draw the result to. Defaults to the value passed to x.
+   * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
+   * @return {Boolean}
+   **/
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) {}
+
+  /**
+   * Returns a string representation of this object.
+   * @method toString
+   * @return {String} a string representation of the instance.
+   **/
+  p.toString = function() {
+    return "[Filter]";
+  }
+  
+  
+  /**
+   * Returns a clone of this Filter instance.
+   * @method clone
+   @return {Filter} A clone of the current Filter instance.
+   **/
+  p.clone = function() {
+    return new Filter();
+  }
+  
+createjs.Filter = Filter;
+}());
+
+/*
+* AlphaMapFilter
+* Visit http://createjs.com/ for documentation, updates and examples.
+*
+* Copyright (c) 2010 gskinner.com, inc.
+* 
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// namespace:
+this.createjs = this.createjs||{};
+
+(function() {
+
+/**
+ * Applies a greyscale alpha map image (or canvas) to the target, such that the alpha channel of the result will
+ * be copied from the red channel of the map, and the RGB channels will be copied from the target.
+ *
+ * Generally, it is recommended that you use {{#crossLink "AlphaMaskFilter"}}{{/crossLink}}, because it has much better
+ * performance.
+ *
+ * See {{#crossLink "Filter"}}{{/crossLink}} for an example of how to apply filters.
+ * @class AlphaMapFilter
+ * @extends Filter
+ * @constructor
+ * @param {Image} alphaMap The greyscale image (or canvas) to use as the alpha value for the result. This should be
+ * exactly the same dimensions as the target.
+ **/
+var AlphaMapFilter = function(alphaMap) {
+  this.initialize(alphaMap);
+}
+var p = AlphaMapFilter.prototype = new createjs.Filter();
+
+// constructor:
+  /** @ignore */
+  p.initialize = function(alphaMap) {
+    this.alphaMap = alphaMap;
+  }
+
+// public properties:
+
+  /**
+   * The greyscale image (or canvas) to use as the alpha value for the result. This should be exactly the same
+    * dimensions as the target.
+   * @property alphaMap
+   * @type Image
+   **/
+  p.alphaMap = null;
+  
+// private properties:
+  p._alphaMap = null;
+  p._mapData = null;
+
+// public methods:
+
+  /**
+   * Applies the filter to the specified context.
+   * @method applyFilter
+   * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
+   * @param {Number} x The x position to use for the source rect.
+   * @param {Number} y The y position to use for the source rect.
+   * @param {Number} width The width to use for the source rect.
+   * @param {Number} height The height to use for the source rect.
+   * @param {CanvasRenderingContext2D} targetCtx Optional. The 2D context to draw the result to. Defaults to the context passed to ctx.
+   * @param {Number} targetX Optional. The x position to draw the result to. Defaults to the value passed to x.
+   * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
+   * @return {Boolean}
+   **/
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) {
+    if (!this.alphaMap) { return true; }
+    if (!this._prepAlphaMap()) { return false; }
+    targetCtx = targetCtx || ctx;
+    if (targetX == null) { targetX = x; }
+    if (targetY == null) { targetY = y; }
+    
+    try {
+      var imageData = ctx.getImageData(x, y, width, height);
+    } catch(e) {
+      //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
+      return false;
+    }
+    var data = imageData.data;
+    var map = this._mapData;
+    var l = data.length;
+    for (var i=0; i<l; i+=4) {
+      data[i+3] = map[i]||0;
+    }
+    imageData.data = data;
+    targetCtx.putImageData(imageData, targetX, targetY);
+    return true;
+  }
+
+  /**
+   * Returns a clone of this object.
+   * @return {AlphaMapFilter} A clone of the current AlphaMapFilter instance.
+   **/
+  p.clone = function() {
+    return new AlphaMapFilter(this.mask);
+  }
+
+  /**
+   * Returns a string representation of this object.
+   * @return {String} a string representation of the instance.
+   **/
+  p.toString = function() {
+    return "[AlphaMapFilter]";
+  }
+
+// private methods:
+  p._prepAlphaMap = function() {
+    if (!this.alphaMap) { return false; }
+    if (this.alphaMap == this._alphaMap && this._mapData) { return true; }
+    
+    this._mapData = null;
+    var map = this._alphaMap = this.alphaMap;
+    var canvas = map;
+    if (map instanceof HTMLCanvasElement) {
+      ctx = canvas.getContext("2d");
+    } else {
+      canvas = createjs.createCanvas?createjs.createCanvas():document.createElement("canvas");
+      canvas.width = map.width;
+      canvas.height = map.height;
+      ctx = canvas.getContext("2d");
+      ctx.drawImage(map,0,0);
+    }
+    
+    try {
+      var imgData = ctx.getImageData(0, 0, map.width, map.height);
+    } catch(e) {
+      //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
+      return false;
+    }
+    this._mapData = imgData.data;
+    return true;
+  }
+
+
+createjs.AlphaMapFilter = AlphaMapFilter;
+}());
+
+/*
+* AlphaMaskFilter
+* Visit http://createjs.com/ for documentation, updates and examples.
+*
+* Copyright (c) 2010 gskinner.com, inc.
+* 
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// namespace:
+this.createjs = this.createjs||{};
+
+(function() {
+
+/**
+ * Applies the alpha from the mask image (or canvas) to the target, such that the alpha channel of the result will
+ * be derived from the mask, and the RGB channels will be copied from the target. This can be used, for example, to
+ * apply an alpha mask to a display object. This can also be used to combine a JPG compressed RGB image with a PNG32
+ * alpha mask, which can result in a much smaller file size than a single PNG32 containing ARGB.
+ *
+ * <b>IMPORTANT NOTE: This filter currently does not support the targetCtx, or targetX/Y parameters correctly.</b>
+ *
+ * See {{#crossLink "Filter"}}{{/crossLink}} for an example of how to apply filters.
+ * @class AlphaMaskFilter
+ * @extends Filter
+ * @constructor
+ * @param {Image} mask 
+ **/
+var AlphaMaskFilter = function(mask) {
+  this.initialize(mask);
+}
+var p = AlphaMaskFilter.prototype = new createjs.Filter();
+
+// constructor:
+  /** @ignore */
+  p.initialize = function(mask) {
+    this.mask = mask;
+  }
+
+// public properties:
+
+  /**
+   * The image (or canvas) to use as the mask.
+   * @property mask
+   * @type Image
+   **/
+  p.mask = null;
+
+// public methods:
+
+  /**
+   * Applies the filter to the specified context. IMPORTANT NOTE: This filter currently does not support the targetCtx,
+   * or targetX/Y parameters correctly.
+   * @method applyFilter
+   * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
+   * @param {Number} x The x position to use for the source rect.
+   * @param {Number} y The y position to use for the source rect.
+   * @param {Number} width The width to use for the source rect.
+   * @param {Number} height The height to use for the source rect.
+   * @param {CanvasRenderingContext2D} targetCtx Optional. The 2D context to draw the result to. Defaults to the context passed to ctx.
+   * @param {Number} targetX Optional. The x position to draw the result to. Defaults to the value passed to x.
+   * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
+   * @return {Boolean}
+   **/
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) {
+    if (!this.mask) { return true; }
+    targetCtx = targetCtx || ctx;
+    if (targetX == null) { targetX = x; }
+    if (targetY == null) { targetY = y; }
+    
+    targetCtx.save();
+    if (ctx != targetCtx) {
+      // TODO: support targetCtx and targetX/Y
+      // clearRect, then draw the ctx in?
+    }
+    
+    targetCtx.globalCompositeOperation = "destination-in";
+    targetCtx.drawImage(this.mask, targetX, targetY);
+    targetCtx.restore();
+    return true;
+  }
+
+  /**
+   * Returns a clone of this object.
+   * @return {AlphaMaskFilter}
+   **/
+  p.clone = function() {
+    return new AlphaMaskFilter(this.mask);
+  }
+
+  /**
+   * Returns a string representation of this object.
+   * @return {String} a string representation of the instance.
+   **/
+  p.toString = function() {
+    return "[AlphaMaskFilter]";
+  }
+
+// private methods:
+
+
+
+createjs.AlphaMaskFilter = AlphaMaskFilter;
+}());
+
+/*
+* BoxBlurFilter
+* Visit http://createjs.com/ for documentation, updates and examples.
+*
+* Copyright (c) 2010 gskinner.com, inc.
+* 
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// namespace:
+this.createjs = this.createjs||{};
+
+(function() {
+
+/**
+ * BoxBlurFilter applies a box blur to DisplayObjects
+ *
+ * See {{#crossLink "Filter"}}{{/crossLink}} for an example of how to apply filters.
+ * @class BoxBlurFilter
+ * @extends Filter
+ * @constructor
+ * @param {Number} blurX
+ * @param {Number} blurY
+ * @param {Number} quality
+ **/
+var BoxBlurFilter = function( blurX, blurY, quality ) {
+  this.initialize( blurX, blurY, quality );
+}
+var p = BoxBlurFilter.prototype = new createjs.Filter();
+
+// constructor:
+  /** @ignore */
+  p.initialize = function( blurX, blurY, quality ) {
+    if ( isNaN(blurX) || blurX < 0 ) blurX = 0;
+    this.blurX = blurX | 0;
+    if ( isNaN(blurY) || blurY < 0 ) blurY = 0;
+    this.blurY = blurY | 0;
+    if ( isNaN(quality) || quality < 1  ) quality = 1;
+    this.quality = quality | 0;
+  }
+
+// public properties:
+
+  /**
+   * Horizontal blur radius
+   * @property blurX
+   * @type Number
+   **/
+  p.blurX = 0;
+
+  /**
+   * Vertical blur radius
+   * @property blurY
+   * @type Number
+   **/
+  p.blurY = 0;
+
+  /**
+   * Number of blur iterations. For example, a value of 1 will produce a rough blur.
+   * A value of 2 will produce a smoother blur, but take twice as long to run.
+   * @property quality
+   * @type Number
+   **/
+  p.quality = 1;
+
+// public methods:
+  /**
+   * Returns a rectangle with values indicating the margins required to draw the filter.
+   * For example, a filter that will extend the drawing area 4 pixels to the left, and 7 pixels to the right
+   * (but no pixels up or down) would return a rectangle with (x=-4, y=0, width=11, height=0).
+   * @method getBounds
+   * @return {Rectangle} a rectangle object indicating the margins required to draw the filter.
+   **/
+  p.getBounds = function() {
+    // TODO: this doesn't properly account for blur quality.
+    return new createjs.Rectangle(-this.blurX,-this.blurY,2*this.blurX,2*this.blurY);
+  }
+
+  /**
+   * Applies the filter to the specified context.
+   * @method applyFilter
+   * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
+   * @param {Number} x The x position to use for the source rect.
+   * @param {Number} y The y position to use for the source rect.
+   * @param {Number} width The width to use for the source rect.
+   * @param {Number} height The height to use for the source rect.
+   * @param {CanvasRenderingContext2D} targetCtx Optional. The 2D context to draw the result to. Defaults to the context passed to ctx.
+   * @param {Number} targetX Optional. The x position to draw the result to. Defaults to the value passed to x.
+   * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
+   * @return {Boolean} 
+   **/
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) {
+    targetCtx = targetCtx || ctx;
+    if (targetX == null) { targetX = x; }
+    if (targetY == null) { targetY = y; }
+    try {
+      var imageData = ctx.getImageData(x, y, width, height);
+    } catch(e) {
+      //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
+      return false;
+    }
+
+    var radiusX = this.blurX;
+    if ( isNaN(radiusX) || radiusX < 0 ) return false;
+    radiusX |= 0;
+
+    var radiusY = this.blurY;
+    if ( isNaN(radiusY) || radiusY < 0 ) return false;
+    radiusY |= 0;
+
+    if ( radiusX == 0 && radiusY == 0 ) return false;
+
+    var iterations = this.quality;
+    if ( isNaN(iterations) || iterations < 1  ) iterations = 1;
+    iterations |= 0;
+    if ( iterations > 3 ) iterations = 3;
+    if ( iterations < 1 ) iterations = 1;
+
+    var pixels = imageData.data;
+
+    var rsum,gsum,bsum,asum,x,y,i,p,p1,p2,yp,yi,yw;
+    var wm = width - 1;
+    var hm = height - 1;
+    var rad1x = radiusX + 1;
+    var divx = radiusX + rad1x;
+    var rad1y = radiusY + 1;
+    var divy = radiusY + rad1y;
+    var div2 = 1 / (divx * divy);
+
+    var r = [];
+    var g = [];
+    var b = [];
+    var a = [];
+
+    var vmin = [];
+    var vmax = [];
+
+    while ( iterations-- > 0 ) {
+      yw = yi = 0;
+
+      for ( y=0; y < height; y++ ){
+        rsum = pixels[yw]   * rad1x;
+        gsum = pixels[yw+1] * rad1x;
+        bsum = pixels[yw+2] * rad1x;
+        asum = pixels[yw+3] * rad1x;
+
+
+        for( i = 1; i <= radiusX; i++ ) {
+          p = yw + (((i > wm ? wm : i )) << 2 );
+          rsum += pixels[p++];
+          gsum += pixels[p++];
+          bsum += pixels[p++];
+          asum += pixels[p]
+        }
+
+        for ( x = 0; x < width; x++ ) {
+          r[yi] = rsum;
+          g[yi] = gsum;
+          b[yi] = bsum;
+          a[yi] = asum;
+
+          if(y==0){
+            vmin[x] = Math.min( x + rad1x, wm ) << 2;
+            vmax[x] = Math.max( x - radiusX, 0 ) << 2;
+          }
+
+          p1 = yw + vmin[x];
+          p2 = yw + vmax[x];
+
+          rsum += pixels[p1++] - pixels[p2++];
+          gsum += pixels[p1++] - pixels[p2++];
+          bsum += pixels[p1++] - pixels[p2++];
+          asum += pixels[p1]   - pixels[p2];
+
+          yi++;
+        }
+        yw += ( width << 2 );
+      }
+
+      for ( x = 0; x < width; x++ ) {
+        yp = x;
+        rsum = r[yp] * rad1y;
+        gsum = g[yp] * rad1y;
+        bsum = b[yp] * rad1y;
+        asum = a[yp] * rad1y;
+
+        for( i = 1; i <= radiusY; i++ ) {
+          yp += ( i > hm ? 0 : width );
+          rsum += r[yp];
+          gsum += g[yp];
+          bsum += b[yp];
+          asum += a[yp];
+        }
+
+        yi = x << 2;
+        for ( y = 0; y < height; y++) {
+          pixels[yi]   = (rsum * div2 + 0.5) | 0;
+          pixels[yi+1] = (gsum * div2 + 0.5) | 0;
+          pixels[yi+2] = (bsum * div2 + 0.5) | 0;
+          pixels[yi+3] = (asum * div2 + 0.5) | 0;
+
+          if( x == 0 ){
+          vmin[y] = Math.min( y + rad1y, hm ) * width;
+          vmax[y] = Math.max( y - radiusY,0 ) * width;
+          }
+
+          p1 = x + vmin[y];
+          p2 = x + vmax[y];
+
+          rsum += r[p1] - r[p2];
+          gsum += g[p1] - g[p2];
+          bsum += b[p1] - b[p2];
+          asum += a[p1] - a[p2];
+
+          yi += width << 2;
+        }
+      }
+    }
+
+    targetCtx.putImageData(imageData, targetX, targetY);
+    return true;
+  }
+
+  /**
+   * Returns a clone of this object.
+   * @return {BoxBlurFilter}
+   **/
+  p.clone = function() {
+    return new BoxBlurFilter(this.blurX, this.blurY, this.quality);
+  }
+
+  /**
+   * Returns a string representation of this object.
+   * @return {String}
+   **/
+  p.toString = function() {
+    return "[BoxBlurFilter]";
+  }
+
+// private methods:
+
+
+
+createjs.BoxBlurFilter = BoxBlurFilter;
+}());
+
+/*
+* ColorFilter
+* Visit http://createjs.com/ for documentation, updates and examples.
+*
+* Copyright (c) 2010 gskinner.com, inc.
+* 
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// namespace:
+this.createjs = this.createjs||{};
+
+(function() {
+
+/**
+ * Applies color transforms.
+ *
+ * See {{#crossLink "Filter"}}{{/crossLink}} for an example of how to apply filters.
+ * @class ColorFilter
+ * @constructor
+ * @extends Filter
+ * @param {Number} redMultiplier
+ * @param {Number} greenMultiplier
+ * @param {Number} blueMultiplier
+ * @param {Number} alphaMultiplier
+ * @param {Number} redOffset
+ * @param {Number} greenOffset
+ * @param {Number} blueOffset
+ * @param {Number} alphaOffset
+ **/
+var ColorFilter = function(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
+  this.initialize(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
+}
+var p = ColorFilter.prototype = new createjs.Filter();
+
+// public properties:
+  /**
+   * Red channel multiplier.
+   * @property redMultiplier
+   * @type Number
+   **/
+  p.redMultiplier = 1;
+  
+  /** 
+   * Green channel multiplier.
+   * @property greenMultiplier
+   * @type Number
+   **/
+  p.greenMultiplier = 1;
+  
+  /**
+   * Blue channel multiplier.
+   * @property blueMultiplier
+   * @type Number
+   **/
+  p.blueMultiplier = 1;
+  
+  /**
+   * Alpha channel multiplier.
+   * @property redMultiplier
+   * @type Number
+   **/
+  p.alphaMultiplier = 1;
+  
+  /**
+   * Red channel offset (added to value).
+   * @property redOffset
+   * @type Number
+   **/
+  p.redOffset = 0;
+  
+  /**
+   * Green channel offset (added to value).
+   * @property greenOffset
+   * @type Number
+   **/
+  p.greenOffset = 0;
+  
+  /**
+   * Blue channel offset (added to value).
+   * @property blueOffset
+   * @type Number
+   **/
+  p.blueOffset = 0;
+  
+  /**
+   * Alpha channel offset (added to value).
+   * @property alphaOffset
+   * @type Number
+   **/
+  p.alphaOffset = 0;
+
+// constructor:
+  /**
+   * Initialization method.
+   * @method initialize
+   * @protected
+   **/
+  p.initialize = function(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
+    this.redMultiplier = redMultiplier != null ? redMultiplier : 1;
+    this.greenMultiplier = greenMultiplier != null ? greenMultiplier : 1;
+    this.blueMultiplier = blueMultiplier != null ? blueMultiplier : 1;
+    this.alphaMultiplier = alphaMultiplier != null ? alphaMultiplier : 1;
+    this.redOffset = redOffset || 0;
+    this.greenOffset = greenOffset || 0;
+    this.blueOffset = blueOffset || 0;
+    this.alphaOffset = alphaOffset || 0;
+  }
+
+// public methods:
+  /**
+   * Applies the filter to the specified context.
+   * @method applyFilter
+   * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
+   * @param {Number} x The x position to use for the source rect.
+   * @param {Number} y The y position to use for the source rect.
+   * @param {Number} width The width to use for the source rect.
+   * @param {Number} height The height to use for the source rect.
+   * @param {CanvasRenderingContext2D} targetCtx Optional. The 2D context to draw the result to. Defaults to the context passed to ctx.
+   * @param {Number} targetX Optional. The x position to draw the result to. Defaults to the value passed to x.
+   * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
+   * @return {Boolean}
+   **/
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) {
+    targetCtx = targetCtx || ctx;
+    if (targetX == null) { targetX = x; }
+    if (targetY == null) { targetY = y; }
+    try {
+      var imageData = ctx.getImageData(x, y, width, height);
+    } catch(e) {
+      //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
+      return false;
+    }
+    var data = imageData.data;
+    var l = data.length;
+    for (var i=0; i<l; i+=4) {
+      data[i] = data[i]*this.redMultiplier+this.redOffset;
+      data[i+1] = data[i+1]*this.greenMultiplier+this.greenOffset;
+      data[i+2] = data[i+2]*this.blueMultiplier+this.blueOffset;
+      data[i+3] = data[i+3]*this.alphaMultiplier+this.alphaOffset;
+    }
+    imageData.data = data;
+    targetCtx.putImageData(imageData, targetX, targetY);
+    return true;
+  }
+
+  /**
+   * Returns a string representation of this object.
+   * @method toString
+   * @return {String} a string representation of the instance.
+   **/
+  p.toString = function() {
+    return "[ColorFilter]";
+  }
+
+
+  /**
+   * Returns a clone of this ColorFilter instance.
+   * @method clone
+   * @return {ColorFilter} A clone of the current ColorFilter instance.
+   **/
+  p.clone = function() {
+    return new ColorFilter(this.redMultiplier, this.greenMultiplier, this.blueMultiplier, this.alphaMultiplier, this.redOffset, this.greenOffset, this.blueOffset, this.alphaOffset);
+  }
+
+createjs.ColorFilter = ColorFilter;
+}());
+
+/*
+* ColorMatrix
+* Visit http://createjs.com/ for documentation, updates and examples.
+*
+* Copyright (c) 2010 gskinner.com, inc.
+* 
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// namespace:
+this.createjs = this.createjs||{};
+
+(function() {
+  
+  /**
+   * Provides helper functions for assembling a matrix for use with the {{#crossLink "ColorMatrixFilter"}}{{/crossLink}},
+   * or can be used directly as the matrix for a ColorMatrixFilter. Most methods return the instance to facilitate
+   * chained calls.
+   *
+   * <h4>Example</h4>
+   *      myColorMatrix.adjustHue(20).adjustBrightness(50);
+   *
+   * See {{#crossLink "Filter"}}{{/crossLink}} for an example of how to apply filters.
+   * @class ColorMatrix
+   * @constructor
+   * @extends Array
+   * @param {Number} brightness
+   * @param {Number} contrast
+   * @param {Number} saturation
+   * @param {Number} hue
+   **/
+  ColorMatrix = function(brightness, contrast, saturation, hue) {
+    this.initialize(brightness, contrast, saturation, hue);
+  };
+  var p = ColorMatrix.prototype = [];
+  
+  /**
+   * Array of delta values for contrast calculations.
+   * @property DELTA_INDEX
+   * @type Array
+   * @static
+   **/
+  ColorMatrix.DELTA_INDEX = [
+    0,    0.01, 0.02, 0.04, 0.05, 0.06, 0.07, 0.08, 0.1,  0.11,
+    0.12, 0.14, 0.15, 0.16, 0.17, 0.18, 0.20, 0.21, 0.22, 0.24,
+    0.25, 0.27, 0.28, 0.30, 0.32, 0.34, 0.36, 0.38, 0.40, 0.42,
+    0.44, 0.46, 0.48, 0.5,  0.53, 0.56, 0.59, 0.62, 0.65, 0.68, 
+    0.71, 0.74, 0.77, 0.80, 0.83, 0.86, 0.89, 0.92, 0.95, 0.98,
+    1.0,  1.06, 1.12, 1.18, 1.24, 1.30, 1.36, 1.42, 1.48, 1.54,
+    1.60, 1.66, 1.72, 1.78, 1.84, 1.90, 1.96, 2.0,  2.12, 2.25, 
+    2.37, 2.50, 2.62, 2.75, 2.87, 3.0,  3.2,  3.4,  3.6,  3.8,
+    4.0,  4.3,  4.7,  4.9,  5.0,  5.5,  6.0,  6.5,  6.8,  7.0,
+    7.3,  7.5,  7.8,  8.0,  8.4,  8.7,  9.0,  9.4,  9.6,  9.8, 
+    10.0
+  ];
+  
+  /**
+   * Identity matrix values.
+   * @property IDENTITY_MATRIX
+   * @type Array
+   * @static
+   **/
+  ColorMatrix.IDENTITY_MATRIX = [
+    1,0,0,0,0,
+    0,1,0,0,0,
+    0,0,1,0,0,
+    0,0,0,1,0,
+    0,0,0,0,1
+  ];
+  
+  /**
+   * The constant length of a color matrix.
+   * @property LENGTH
+   * @type Number
+   * @static
+   **/
+  ColorMatrix.LENGTH = ColorMatrix.IDENTITY_MATRIX.length;
+  
+  
+  /**
+   * Initialization method.
+   * @method initialize
+   * @protected
+   */
+  p.initialize = function(brightness,contrast,saturation,hue) {
+    this.reset();
+    this.adjustColor(brightness,contrast,saturation,hue);
+    return this;
+  };
+  
+  /**
+   * Resets the matrix to identity values.
+   * @method reset
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   */
+  p.reset = function() {
+    return this.copyMatrix(ColorMatrix.IDENTITY_MATRIX);
+  };
+  
+  /**
+   * Shortcut method to adjust brightness, contrast, saturation and hue.
+   * Equivalent to calling adjustHue(hue), adjustContrast(contrast),
+   * adjustBrightness(brightness), adjustSaturation(saturation), in that order.
+   * @param {Number} brightness
+   * @param {Number} contrast
+   * @param {Number} saturation
+   * @param {Number} hue
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   **/
+  p.adjustColor = function(brightness,contrast,saturation,hue) {
+    this.adjustHue(hue);
+    this.adjustContrast(contrast);
+    this.adjustBrightness(brightness);
+    return this.adjustSaturation(saturation);
+  };
+  
+  /**
+   * Adjusts the brightness of pixel color by adding the specified value to the red, green and blue channels.
+   * Positive values will make the image brighter, negative values will make it darker.
+   * @param {Number} value A value between -255 & 255 that will be added to the RGB channels.
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   **/
+  p.adjustBrightness = function(value) {
+    if (value == 0 || isNaN(value)) { return this; }
+    value = this._cleanValue(value,255);
+    this._multiplyMatrix([
+      1,0,0,0,value,
+      0,1,0,0,value,
+      0,0,1,0,value,
+      0,0,0,1,0,
+      0,0,0,0,1
+    ]);
+    return this;
+  },
+  
+  /**
+   * Adjusts the contrast of pixel color.
+   * Positive values will increase contrast, negative values will decrease contrast.
+   * @param {Number} value A value between -100 & 100.
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   **/
+  p.adjustContrast = function(value) {
+    if (value == 0 || isNaN(value)) { return this; }
+    value = this._cleanValue(value,100);
+    var x;
+    if (value<0) {
+      x = 127+value/100*127;
+    } else {
+      x = value%1;
+      if (x == 0) {
+        x = ColorMatrix.DELTA_INDEX[value];
+      } else {
+        x = ColorMatrix.DELTA_INDEX[(value<<0)]*(1-x)+ColorMatrix.DELTA_INDEX[(value<<0)+1]*x; // use linear interpolation for more granularity.
+      }
+      x = x*127+127;
+    }
+    this._multiplyMatrix([
+      x/127,0,0,0,0.5*(127-x),
+      0,x/127,0,0,0.5*(127-x),
+      0,0,x/127,0,0.5*(127-x),
+      0,0,0,1,0,
+      0,0,0,0,1
+    ]);
+    return this;
+  };
+  
+  /**
+   * Adjusts the color saturation of the pixel.
+   * Positive values will increase saturation, negative values will decrease saturation (trend towards greyscale).
+   * @param {Number} value A value between -100 & 100.
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   **/
+  p.adjustSaturation = function(value) {
+    if (value == 0 || isNaN(value)) { return this; }
+    value = this._cleanValue(value,100);
+    var x = 1+((value > 0) ? 3*value/100 : value/100);
+    var lumR = 0.3086;
+    var lumG = 0.6094;
+    var lumB = 0.0820;
+    this._multiplyMatrix([
+      lumR*(1-x)+x,lumG*(1-x),lumB*(1-x),0,0,
+      lumR*(1-x),lumG*(1-x)+x,lumB*(1-x),0,0,
+      lumR*(1-x),lumG*(1-x),lumB*(1-x)+x,0,0,
+      0,0,0,1,0,
+      0,0,0,0,1
+    ]);
+    return this;
+  };
+  
+  
+  /**
+   * Adjusts the hue of the pixel color.
+   * @param {Number} value A value between -180 & 180.
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   **/
+  p.adjustHue = function(value) {
+    if (value == 0 || isNaN(value)) { return this; }
+    value = this._cleanValue(value,180)/180*Math.PI;
+    var cosVal = Math.cos(value);
+    var sinVal = Math.sin(value);
+    var lumR = 0.213;
+    var lumG = 0.715;
+    var lumB = 0.072;
+    this._multiplyMatrix([
+      lumR+cosVal*(1-lumR)+sinVal*(-lumR),lumG+cosVal*(-lumG)+sinVal*(-lumG),lumB+cosVal*(-lumB)+sinVal*(1-lumB),0,0,
+      lumR+cosVal*(-lumR)+sinVal*(0.143),lumG+cosVal*(1-lumG)+sinVal*(0.140),lumB+cosVal*(-lumB)+sinVal*(-0.283),0,0,
+      lumR+cosVal*(-lumR)+sinVal*(-(1-lumR)),lumG+cosVal*(-lumG)+sinVal*(lumG),lumB+cosVal*(1-lumB)+sinVal*(lumB),0,0,
+      0,0,0,1,0,
+      0,0,0,0,1
+    ]);
+    return this;
+  };
+  
+  /**
+   * Concatenates (multiplies) the specified matrix with this one.
+   * @param {Array} matrix An array or ColorMatrix instance.
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   **/
+  p.concat = function(matrix) {
+    matrix = this._fixMatrix(matrix);
+    if (matrix.length != ColorMatrix.LENGTH) { return this; }
+    this._multiplyMatrix(matrix);
+    return this;
+  };
+  
+  /**
+   * Returns a clone of this ColorMatrix.
+   * @return {ColorMatrix} A clone of this ColorMatrix.
+   **/
+  p.clone = function() {
+    return new ColorMatrix(this);
+  };
+  
+  /**
+   * Return a length 25 (5x5) array instance containing this matrix's values.
+   * @return {Array} An array holding this matrix's values.
+   **/
+  p.toArray = function() {
+    return this.slice(0,ColorMatrix.LENGTH);
+  };
+  
+  /**
+   * Copy the specified matrix's values to this matrix.
+   * @param {Array} matrix An array or ColorMatrix instance.
+   * @return {ColorMatrix} The ColorMatrix instance the method is called on (useful for chaining calls.)
+   **/
+  p.copyMatrix = function(matrix) {
+    var l = ColorMatrix.LENGTH;
+    for (var i=0;i<l;i++) {
+      this[i] = matrix[i];
+    }
+    return this;
+  };
+  
+// private methods:
+  
+  /**
+   * @method _multiplyMatrix
+   * @protected
+   **/
+  p._multiplyMatrix = function(matrix) {
+    var col = [];
+    
+    for (var i=0;i<5;i++) {
+      for (var j=0;j<5;j++) {
+        col[j] = this[j+i*5];
+      }
+      for (var j=0;j<5;j++) {
+        var val=0;
+        for (var k=0;k<5;k++) {
+          val += matrix[j+k*5]*col[k];
+        }
+        this[j+i*5] = val;
+      }
+    }
+  };
+  
+  /**
+   * Make sure values are within the specified range, hue has a limit of 180, brightness is 255, others are 100.
+   * @method _cleanValue
+   * @protected
+   **/
+  p._cleanValue = function(value,limit) {
+    return Math.min(limit,Math.max(-limit,value));
+  };
+  
+  // 
+  /**
+   * Makes sure matrixes are 5x5 (25 long).
+   * @method _fixMatrix
+   * @protected
+   **/
+  p._fixMatrix = function(matrix) {
+    if (matrix instanceof ColorMatrix) { matrix = matrix.slice(0); }
+    if (matrix.length < ColorMatrix.LENGTH) {
+      matrix = matrix.slice(0,matrix.length).concat(ColorMatrix.IDENTITY_MATRIX.slice(matrix.length,ColorMatrix.LENGTH));
+    } else if (matrix.length > ColorMatrix.LENGTH) {
+      matrix = matrix.slice(0,ColorMatrix.LENGTH);
+    }
+    return matrix;
+  };
+  
+  createjs.ColorMatrix = ColorMatrix;
+
+}());
+
+/*
+* ColorMatrixFilter
+* Visit http://createjs.com/ for documentation, updates and examples.
+*
+* Copyright (c) 2010 gskinner.com, inc.
+* 
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use,
+* copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the
+* Software is furnished to do so, subject to the following
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+* OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+* HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// namespace:
+this.createjs = this.createjs||{};
+
+(function() {
+
+/**
+ * Allows you to carry out complex color operations such as modifying saturation, brightness, or inverting. See the
+ * {{#crossLink "ColorMatrix"}}{{/crossLink}} for more information on changing colors.
+ *
+ * See {{#crossLink "Filter"}}{{/crossLink}} for an example of how to apply filters.
+ * @class ColorMatrixFilter
+ * @constructor
+ * @extends Filter
+ * @param {Array} matrix A 4x5 matrix describing the color operation to perform. See also the ColorMatrix class.
+ **/
+var ColorMatrixFilter = function(matrix) {
+  this.initialize(matrix);
+}
+var p = ColorMatrixFilter.prototype = new createjs.Filter();
+
+// public properties:
+  p.matrix = null;
+  
+// constructor:
+  // TODO: detailed docs.
+  /** 
+   * @method initialize
+   * @protected
+   * @param {Array} matrix A 4x5 matrix describing the color operation to perform.
+   **/
+  p.initialize = function(matrix) {
+    this.matrix = matrix;
+  }
+
+// public methods:
+  /**
+   * Applies the filter to the specified context.
+   * @method applyFilter
+   * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
+   * @param {Number} x The x position to use for the source rect.
+   * @param {Number} y The y position to use for the source rect.
+   * @param {Number} width The width to use for the source rect.
+   * @param {Number} height The height to use for the source rect.
+   * @param {CanvasRenderingContext2D} targetCtx Optional. The 2D context to draw the result to. Defaults to the context passed to ctx.
+   * @param {Number} targetX Optional. The x position to draw the result to. Defaults to the value passed to x.
+   * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
+   * @return {Boolean}
+   **/
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) {
+    targetCtx = targetCtx || ctx;
+    if (targetX == null) { targetX = x; }
+    if (targetY == null) { targetY = y; }
+    try {
+      var imageData = ctx.getImageData(x, y, width, height);
+    } catch(e) {
+      //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
+      return false;
+    }
+    var data = imageData.data;
+    var l = data.length;
+    var r,g,b,a;
+    var mtx = this.matrix;
+    var m0 =  mtx[0],  m1 =  mtx[1],  m2 =  mtx[2],  m3 =  mtx[3],  m4 =  mtx[4];
+    var m5 =  mtx[5],  m6 =  mtx[6],  m7 =  mtx[7],  m8 =  mtx[8],  m9 =  mtx[9];
+    var m10 = mtx[10], m11 = mtx[11], m12 = mtx[12], m13 = mtx[13], m14 = mtx[14];
+    var m15 = mtx[15], m16 = mtx[16], m17 = mtx[17], m18 = mtx[18], m19 = mtx[19];
+    
+    for (var i=0; i<l; i+=4) {
+      r = data[i];
+      g = data[i+1];
+      b = data[i+2];
+      a = data[i+3];
+      data[i] = r*m0+g*m1+b*m2+a*m3+m4; // red
+      data[i+1] = r*m5+g*m6+b*m7+a*m8+m9; // green
+      data[i+2] = r*m10+g*m11+b*m12+a*m13+m14; // blue
+      data[i+3] = r*m15+g*m16+b*m17+a*m18+m19; // alpha
+    }
+    imageData.data = data;
+    targetCtx.putImageData(imageData, targetX, targetY);
+    return true;
+  }
+
+  /**
+   * Returns a string representation of this object.
+   * @method toString
+   * @return {String} a string representation of the instance.
+   **/
+  p.toString = function() {
+    return "[ColorMatrixFilter]";
+  }
+  
+  
+  /**
+   * Returns a clone of this ColorMatrixFilter instance.
+   * @method clone
+   * @return {ColorMatrixFilter} A clone of the current ColorMatrixFilter instance.
+   **/
+  p.clone = function() {
+    return new ColorMatrixFilter(this.matrix);
+  }
+  
+createjs.ColorMatrixFilter = ColorMatrixFilter;
+}());
