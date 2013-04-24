@@ -9,6 +9,11 @@ module.exports = class Opponent extends createjs.Container
     @_draw()
 
   _draw: ->
+    # set size and registration points
+    @height = @width  = 32
+    @regX   = @regY   = 16
+
+    # initialize spritesheet
     spritesheet = new createjs.SpriteSheet
       images: ['images/opponent_tank.png']
       frames: 
@@ -18,18 +23,19 @@ module.exports = class Opponent extends createjs.Container
       animations:
         drive: [0,7, null, 4]
 
+    # initialize spritesheet animation
     @animation = new createjs.BitmapAnimation spritesheet
     @animation.currentFrame =0
 
+    # place animation on stage
     @addChild @animation
 
-    @velocity = new createjs.Point(0,0)
-    @x = @y   = 10
-
   _handleMovement: (data) =>
+    # manual animation like a boss
     @animation.currentFrame = 0 if @animation.currentFrame is 8
     @animation.currentFrame++
 
+    # set the data received via RTC
     @rotation = data.r
     @x        = data.x
     @y        = data.y
