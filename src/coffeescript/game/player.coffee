@@ -64,12 +64,21 @@ module.exports = class Player extends createjs.Container
     App.RealtimeManager.sendLocation x:@x, y:@y
 
   _move: ->
+    s = $('#status')
+
     movement_max = 10
 
     # TODO: Fix - only turn when moving.
     # steering
     if KeyboardHandler.RightArrow then @rotation+= 10
     if KeyboardHandler.LeftArrow  then @rotation-= 10
+
+    # limit rotation at 180/-180 degrees
+    @rotation = (0 - @rotation) + (@rotation - 180) if @rotation > 180
+
+    if @rotation < -180 then @rotation = (@rotation*-1) - 180
+
+    s.text "rotation: #{@rotation}"
 
     # foreward movement
     if KeyboardHandler.UpArrow    and @speed > 0-movement_max then @speed += 1
@@ -91,37 +100,46 @@ module.exports = class Player extends createjs.Container
       factorX = @rotation / 90
       factorY = 1 - factorX
 
-    if @rotation > 90 and @rotation <= 180
+    else if @rotation > 90 and @rotation <= 180
       factorY = (@rotation - 90) / 90
       factorX = 1 - factorY
 
-    if @rotation < 0 and @rotation >= -90
+    else if @rotation < 0 and @rotation >= -90
       factorX = Math.abs(@rotation) / 90
       factorY = 1 - factorX
 
-    if @rotation < -90 and @rotation >= -180
+    else if @rotation < -90 and @rotation >= -180
       factorY = (Math.abs(@rotation)-90) / 90
       factorX = 1 - factorY
+
+    else
+      factorY = factorX = 0
+
+    #s.text "#{@rotation} - #{factorY} - #{factorX}"
     
-    # turn forcors into actual speeds
+    # turn factors into actual speeds
     if @rotation < 0 and @rotation >= -90
       @velocity.x = 0 - @speed * factorX;
       @velocity.y = 0 - @speed * factorY;
     
-    if @rotation >= 0 and @rotation <= 90
+    else if @rotation >= 0 and @rotation <= 90
       @velocity.x = @speed * factorX;
       @velocity.y = 0 - @speed * factorY;
     
-    if @rotation >= 90 and @rotation <= 180
+    else if @rotation >= 90 and @rotation <= 180
       @velocity.x = @speed * factorX;
       @velocity.y = @speed * factorY;
     
-    if @rotation <= -90 and @rotation >= -180
+    else if @rotation <= -90 and @rotation >= -180
       @velocity.x = 0- @speed * factorX;
       @velocity.y = @speed * factorY;
+    
+    else
+      @velocity.x = @velocity.y = 0
 
 
-    console.log @velocity.x, @velocity.y
+
+    #console.log @velocity.x, @velocity.y
 
     # assign actual position
     @x += @velocity.x
