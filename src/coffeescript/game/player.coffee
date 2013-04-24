@@ -67,7 +67,6 @@ module.exports = class Player extends createjs.Container
     movement_max   = 10
     @prev_rotation = @rotation
 
-
     # steering
     if KeyboardHandler.RightArrow then @rotation+= 10
     if KeyboardHandler.LeftArrow  then @rotation-= 10
@@ -86,9 +85,6 @@ module.exports = class Player extends createjs.Container
     unless KeyboardHandler.DownArrow or KeyboardHandler.UpArrow
       if @speed > 0 then @speed -=1
       if @speed < 0 then @speed +=1
-
-    # TODO: Refactor this into some other class
-    # so the opponent class can use this too! :D
 
     # do some fancy calculations
     factor = new createjs.Point(0,0)
@@ -132,16 +128,6 @@ module.exports = class Player extends createjs.Container
     else
       @velocity.x = @velocity.y = 0
 
-
     # assign actual position
     @x += @velocity.x
     @y += @velocity.y
-
-
-
-
-
-
-
-
-
