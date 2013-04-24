@@ -8,11 +8,24 @@ module.exports = class Player extends createjs.Container
   constructor: (@color) ->
     super
     createjs.Ticker.addListener(@)
+
+    # setup basic vars
+    @velocity  = new createjs.Point(0, 0)
+    @speed     = 0
+    @x = @y    = 10
+
+    # draw the damn thing
     @_draw()
 
   _draw: ->
+
+    # set size and registration points
+    @height = @width  = 32
+    @regX   = @regY   = 16
+
+    # initialize spritesheet
     spritesheet = new createjs.SpriteSheet
-      images: ['images/tanks.png']
+      images: ['images/own_tank.png']
       frames: 
         width:  32
         height: 32
@@ -20,13 +33,14 @@ module.exports = class Player extends createjs.Container
       animations:
         drive: [0,7, null, 4]
 
+    # initialize sprite animation
     @animation = new createjs.BitmapAnimation spritesheet
+
+    # start at first frame of animation
     @animation.currentFrame =0
 
+    # add the animation to stage
     @addChild @animation
-
-    @velocity = new createjs.Point(0,0)
-    @x = @y = 10
 
   tick: =>
     # movement
@@ -52,24 +66,72 @@ module.exports = class Player extends createjs.Container
   _move: ->
     movement_max = 10
 
-    # movement X-axis
-    if KeyboardHandler.RightArrow and @velocity.x < movement_max   then @velocity.x += 1
-    if KeyboardHandler.LeftArrow  and @velocity.x > 0-movement_max then @velocity.x -= 1
+    # TODO: Fix - only turn when moving.
+    # steering
+    if KeyboardHandler.RightArrow then @rotation+= 10
+    if KeyboardHandler.LeftArrow  then @rotation-= 10
 
-    # movement Y-axis
-    if KeyboardHandler.UpArrow    and @velocity.y > 0-movement_max   then @velocity.y -= 1
-    if KeyboardHandler.DownArrow  and @velocity.y < movement_max then @velocity.y += 1
+    # foreward movement
+    if KeyboardHandler.UpArrow    and @speed > 0-movement_max then @speed += 1
+    if KeyboardHandler.DownArrow  and @speed < movement_max   then @speed -= 1
 
-    # return to zero X-velocity
-    unless KeyboardHandler.RightArrow or KeyboardHandler.LeftArrow
-      if @velocity.x > 0 then @velocity.x -=1
-      if @velocity.x < 0 then @velocity.x +=1
-
-    # return to zero Y-velocity
+    # return to zero speed with ease if arrow keys are release
     unless KeyboardHandler.DownArrow or KeyboardHandler.UpArrow
-      if @velocity.y > 0 then @velocity.y -=1
-      if @velocity.y < 0 then @velocity.y +=1
+      if @speed > 0 then @speed -=1
+      if @speed < 0 then @speed +=1
 
-    # actual moving
+    # TODO: Refactor this into some other class
+    # so the opponent class can use this too! :D
+
+    # do some fancy calculations
+    factorY = 0
+    factorX = 0
+
+    if @rotation >= 0 and @rotation <= 90
+      factorX = @rotation / 90
+      factorY = 1 - factorX
+
+    if @rotation > 90 and @rotation <= 180
+      factorY = (@rotation - 90) / 90
+      factorX = 1 - factorY
+
+    if @rotation < 0 and @rotation >= -90
+      factorX = Math.abs(@rotation) / 90
+      factorY = 1 - factorX
+
+    if @rotation < -90 and @rotation >= -180
+      factorY = (Math.abs(@rotation)-90) / 90
+      factorX = 1 - factorY
+    
+    # turn forcors into actual speeds
+    if @rotation < 0 and @rotation >= -90
+      @velocity.x = 0 - @speed * factorX;
+      @velocity.y = 0 - @speed * factorY;
+    
+    if @rotation >= 0 and @rotation <= 90
+      @velocity.x = @speed * factorX;
+      @velocity.y = 0 - @speed * factorY;
+    
+    if @rotation >= 90 and @rotation <= 180
+      @velocity.x = @speed * factorX;
+      @velocity.y = @speed * factorY;
+    
+    if @rotation <= -90 and @rotation >= -180
+      @velocity.x = 0- @speed * factorX;
+      @velocity.y = @speed * factorY;
+
+
+    console.log @velocity.x, @velocity.y
+
+    # assign actual position
     @x += @velocity.x
     @y += @velocity.y
+
+
+
+
+
+
+
+
+
