@@ -50,7 +50,7 @@ module.exports = class Player extends createjs.Container
     @_animation()
 
     # only sync position if moving
-    unless @velocity.x is 0 and @velocity.y is 0
+    unless @velocity.x is 0 and @velocity.y is 0 and @rotation is @prev_rotation
       @_syncPosition()
 
   _animation: ->
@@ -61,10 +61,12 @@ module.exports = class Player extends createjs.Container
 
   _syncPosition: ->
     # broadbast position to opponent
-    App.RealtimeManager.sendLocation x:@x, y:@y
+    App.RealtimeManager.sendLocation x:@x, y:@y, r: @rotation
 
   _move: ->
-    movement_max = 10
+    movement_max   = 10
+    @prev_rotation = @rotation
+
 
     # steering
     if KeyboardHandler.RightArrow then @rotation+= 10
@@ -90,7 +92,7 @@ module.exports = class Player extends createjs.Container
 
     # do some fancy calculations
     factor = new createjs.Point(0,0)
-    
+
     if @rotation >= 0 and @rotation <= 90
       factor.x = @rotation / 90
       factor.y = 1 - factor.x
