@@ -18,6 +18,8 @@ module.exports = class Game extends Screen
     @opponent = new Opponent('#0000FF')
 
     @stage.addChild(@you)
+    @you.start()
+
     @stage.addChild(@opponent)
 
   tick: =>

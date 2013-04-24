@@ -12,12 +12,19 @@ module.exports = class Player extends createjs.Container
     # setup basic vars
     @velocity  = new createjs.Point(0, 0)
     @speed     = 0
-    @x = @y    = 10
 
+  start: ->
     # draw the damn thing
     @_draw()
 
   _draw: ->
+    # random spawn point within playing field
+    @x        = Math.floor(Math.random() * @getStage().canvas.width)
+    @y        = Math.floor(Math.random() * @getStage().canvas.height)
+    @rotation = Math.floor(Math.random() * 360)
+    
+    # first sync :)
+    @_syncPosition()
 
     # set size and registration points
     @height = @width  = 32
