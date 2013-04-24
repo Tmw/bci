@@ -85,52 +85,47 @@ module.exports = class Player extends createjs.Container
       if @speed > 0 then @speed -=1
       if @speed < 0 then @speed +=1
 
-
-
     # TODO: Refactor this into some other class
     # so the opponent class can use this too! :D
 
-
-    # TODO: Refactor this so that it uses a createjs.Point as well
     # do some fancy calculations
-    factorY = 0
-    factorX = 0
-
+    factor = new createjs.Point(0,0)
+    
     if @rotation >= 0 and @rotation <= 90
-      factorX = @rotation / 90
-      factorY = 1 - factorX
+      factor.x = @rotation / 90
+      factor.y = 1 - factor.x
 
     else if @rotation > 90 and @rotation <= 180
-      factorY = (@rotation - 90) / 90
-      factorX = 1 - factorY
+      factor.y = (@rotation - 90) / 90
+      factor.x = 1 - factor.y
 
     else if @rotation < 0 and @rotation >= -90
-      factorX = Math.abs(@rotation) / 90
-      factorY = 1 - factorX
+      factor.x = Math.abs(@rotation) / 90
+      factor.y = 1 - factor.x
 
     else if @rotation < -90 and @rotation >= -180
-      factorY = (Math.abs(@rotation)-90) / 90
-      factorX = 1 - factorY
+      factor.y = (Math.abs(@rotation)-90) / 90
+      factor.x = 1 - factor.y
 
     else
-      factorY = factorX = 0
+      factor.y = factor.x = 0
     
     # turn factors into actual speeds
     if @rotation < 0 and @rotation >= -90
-      @velocity.x = 0 - @speed * factorX;
-      @velocity.y = 0 - @speed * factorY;
+      @velocity.x = 0 - @speed * factor.x;
+      @velocity.y = 0 - @speed * factor.y;
     
     else if @rotation >= 0 and @rotation <= 90
-      @velocity.x = @speed * factorX;
-      @velocity.y = 0 - @speed * factorY;
+      @velocity.x = @speed * factor.x;
+      @velocity.y = 0 - @speed * factor.y;
     
     else if @rotation >= 90 and @rotation <= 180
-      @velocity.x = @speed * factorX;
-      @velocity.y = @speed * factorY;
+      @velocity.x = @speed * factor.x;
+      @velocity.y = @speed * factor.y;
     
     else if @rotation <= -90 and @rotation >= -180
-      @velocity.x = 0- @speed * factorX;
-      @velocity.y = @speed * factorY;
+      @velocity.x = 0- @speed * factor.x;
+      @velocity.y = @speed * factor.y;
     
     else
       @velocity.x = @velocity.y = 0
