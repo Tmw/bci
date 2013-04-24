@@ -64,8 +64,6 @@ module.exports = class Player extends createjs.Container
     App.RealtimeManager.sendLocation x:@x, y:@y
 
   _move: ->
-    s = $('#status')
-
     movement_max = 10
 
     # steering
@@ -79,17 +77,21 @@ module.exports = class Player extends createjs.Container
       @rotation = 180 - (@rotation + 180)
 
     # foreward movement
-    if KeyboardHandler.UpArrow    and @speed > 0-movement_max then @speed += 1
-    if KeyboardHandler.DownArrow  and @speed < movement_max   then @speed -= 1
+    if KeyboardHandler.DownArrow  and @speed > 0-movement_max then @speed -= 1
+    if KeyboardHandler.UpArrow    and @speed < movement_max   then @speed += 1
 
-    # return to zero speed with ease if arrow keys are release
+    # return to zero speed with ease if arrow keys are released
     unless KeyboardHandler.DownArrow or KeyboardHandler.UpArrow
       if @speed > 0 then @speed -=1
       if @speed < 0 then @speed +=1
 
+
+
     # TODO: Refactor this into some other class
     # so the opponent class can use this too! :D
 
+
+    # TODO: Refactor this so that it uses a createjs.Point as well
     # do some fancy calculations
     factorY = 0
     factorX = 0
