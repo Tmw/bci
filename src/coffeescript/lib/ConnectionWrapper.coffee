@@ -26,7 +26,7 @@ module.exports = class ConnectionWrapper
     @_createOffer()
 
   send: (msg) ->
-    if @dataChannel.readyState is "open"
+    if @dataChannel and @dataChannel.readyState is "open"
       @dataChannel.send(msg)
 
   # when the handshake completes, handle the answer
