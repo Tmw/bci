@@ -1,6 +1,8 @@
 /node_modules/
 /components/jquery
+/dist/index.html
+/dist/javascript
+/dist/stylesheets
 /build
-/dist
 /lib/
 /.sass-cache/
