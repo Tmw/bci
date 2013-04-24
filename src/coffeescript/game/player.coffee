@@ -74,11 +74,10 @@ module.exports = class Player extends createjs.Container
     if KeyboardHandler.LeftArrow  then @rotation-= 10
 
     # limit rotation at 180/-180 degrees
-    @rotation = (0 - @rotation) + (@rotation - 180) if @rotation > 180
-
-    if @rotation < -180 then @rotation = (@rotation*-1) - 180
-
-    s.text "rotation: #{@rotation}"
+    if @rotation > 180
+      @rotation = (0 - @rotation) + (@rotation - 180)
+    else if @rotation < -180
+      @rotation = 180 - (@rotation + 180)
 
     # foreward movement
     if KeyboardHandler.UpArrow    and @speed > 0-movement_max then @speed += 1
