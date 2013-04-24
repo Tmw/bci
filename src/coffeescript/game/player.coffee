@@ -68,7 +68,6 @@ module.exports = class Player extends createjs.Container
 
     movement_max = 10
 
-    # TODO: Fix - only turn when moving.
     # steering
     if KeyboardHandler.RightArrow then @rotation+= 10
     if KeyboardHandler.LeftArrow  then @rotation-= 10
@@ -113,8 +112,6 @@ module.exports = class Player extends createjs.Container
 
     else
       factorY = factorX = 0
-
-    #s.text "#{@rotation} - #{factorY} - #{factorX}"
     
     # turn factors into actual speeds
     if @rotation < 0 and @rotation >= -90
@@ -136,9 +133,6 @@ module.exports = class Player extends createjs.Container
     else
       @velocity.x = @velocity.y = 0
 
-
-
-    #console.log @velocity.x, @velocity.y
 
     # assign actual position
     @x += @velocity.x
