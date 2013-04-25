@@ -8,19 +8,27 @@ module.exports = class Game extends Screen
   screen: '.game'
 
   initialize: ->
+    # disconnect from socket to pull me off of the players list
+    App.Socket.disconnect()
+
+    # setup EaselJS
     createjs.Ticker.setFPS 60
     createjs.Ticker.addListener(@)
 
+    # initialize a stage
     @stage    = new createjs.Stage('canvas')
 
   onShow: ->
+    # create players
     @you      = new Player('#FF0000')
     @opponent = new Opponent('#0000FF')
 
+    # add players to stage
     @stage.addChild(@you)
-    @you.start()
-
     @stage.addChild(@opponent)
 
-  tick: =>
-    @stage.update()
+    # begin game logic for player
+    @you.start()
+
+  # each tick, update the stage
+  tick: => @stage.update()
