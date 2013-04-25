@@ -12,7 +12,6 @@ module.exports = class BaseCollection
         @removeItemAtIndex(index)
       index++
 
-
   removeItemAtIndex: (index) ->
     @_items.splice index, 1
 

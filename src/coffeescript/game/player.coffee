@@ -1,7 +1,6 @@
 require 'createjs'
 KeyboardHandler = require '../lib/KeyboardHandler'
 RealtimeManager = require '../lib/RealtimeManager'
-
 module.exports = class Player extends createjs.Container
   baseColor: '#000'
 
@@ -134,6 +133,8 @@ module.exports = class Player extends createjs.Container
     
     else
       @velocity.x = @velocity.y = 0
+
+    @direction = factor
 
     # assign actual position
     @x += @velocity.x
