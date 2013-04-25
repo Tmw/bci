@@ -3,6 +3,7 @@ Screen          = require './screen'
 KeyboardHandler = require '../lib/KeyboardHandler'
 Player          = require '../game/player'
 Opponent        = require '../game/opponent'
+Bullet          = require '../game/bullet'
 
 module.exports = class Game extends Screen
   screen: '.game'
@@ -31,4 +32,8 @@ module.exports = class Game extends Screen
     @you.start()
 
   # each tick, update the stage
-  tick: => @stage.update()
+  tick: => 
+    if KeyboardHandler.SpaceBar
+      new Bullet(@you, @stage)
+
+    @stage.update()
