@@ -19,6 +19,7 @@ module.exports = class ConnectionWrapper
     # first setup a new datachannel
     @dataChannel                = @peerConnection.createDataChannel "dc", reliable: false
     @handShakeCompleteCallback  = callback
+
     # setup listeners for datachannel
     @_setupDCListeners()
 
@@ -36,7 +37,6 @@ module.exports = class ConnectionWrapper
     
     for candidate in detailsObj.handshake.candidates
       @peerConnection.addIceCandidate new RTCIceCandidate(candidate)
-
 
   addIceCandidate: (candidate) ->
     # pass candidate through to @peerConnection
@@ -68,15 +68,14 @@ module.exports = class ConnectionWrapper
   # internal methods
   ####
   _polyFill: ->
-    # To be implemented:
     # polyfill between webkit and mozilla implementations
-    # just do webkit for now
-    window.RTCPeerConnection = webkitRTCPeerConnection
+    window.RTCPeerConnection = webkitRTCPeerConnection || mozRTCPeerConnection
   
   _setupListeners: ->
     # listener for PeerConnection connections
-    @peerConnection.onicecandidate  = @_onIceCandidate
-    @peerConnection.ondatachannel   = @_onDataChannel
+    @peerConnection.onicecandidate             = @_onIceCandidate
+    @peerConnection.ondatachannel              = @_onDataChannel
+    @peerConnection.oniceconnectionstatechange = @_channelStateChanged
 
   _channelStateChanged: (event) =>
     # the channel's state has changed

@@ -22,7 +22,12 @@ class _app
     
     # When a connection is made, transition to game screen
     App.Connection.setOnChangeCallback (event) =>
-      @transitionToState 'game'
+      if event.type is "open"
+        @transitionToState 'game'
+
+      # when the connection is closed, transition back to playerselect screen
+      else if event.type is "iceconnectionstatechange"
+        @transitionToState 'playerselect'
 
     # transition to first screen
     @stateChanged()
