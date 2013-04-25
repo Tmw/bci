@@ -26,7 +26,7 @@ class _app
         @transitionToState 'game'
 
       # when the connection is closed, transition back to playerselect screen
-      else if event.type is "iceconnectionstatechange"
+      else if event.type is "iceconnectionstatechange" and event.currentTarget.iceConnectionState isnt "connected"
         @transitionToState 'playerselect'
 
     # transition to first screen
