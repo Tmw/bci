@@ -30,6 +30,7 @@ module.exports = class UserCollection extends BaseCollection
     req.socket.on 'users:challenge:new',    @_handleNewChallange
     req.socket.on 'users:challenge:finish', @_handleHandshakeComplete
     req.socket.on 'disconnect',          => @_handleDisconnect(req)
+    req.socket.on 'unsubscribe',         => @_handleDisconnect(req)
 
   _handleDisconnect: (req) =>
     # remove user from collection

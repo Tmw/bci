@@ -9,7 +9,7 @@ module.exports = class Game extends Screen
 
   initialize: ->
     # disconnect from socket to pull me off of the players list
-    App.Socket.disconnect()
+    App.Socket.emit 'unsubscribe'
 
     # setup EaselJS
     createjs.Ticker.setFPS 60
