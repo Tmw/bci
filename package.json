@@ -24,6 +24,7 @@
     "node": ">=0.10"
   },
    "scripts": {
-    "start": "node build/server/server.js"
+    "postinstall": "bower install",
+    "server": "node build/server/server.js"
   }
 }
