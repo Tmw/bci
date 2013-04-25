@@ -3,6 +3,7 @@ class KeyboardHandler
   LeftArrow:  false
   UpArrow:    false
   DownArrow:  false
+  SpaceBar:   false
 
   constructor: ->
     $(window).on 'keydown', @_keyDownHandler
@@ -10,6 +11,7 @@ class KeyboardHandler
 
   _keyDownHandler: (e) =>
     switch e.keyCode
+      when 32 then @SpaceBar   = true
       when 39 then @RightArrow = true
       when 37 then @LeftArrow  = true
       when 38 then @UpArrow    = true
@@ -17,6 +19,7 @@ class KeyboardHandler
 
   _keyUpHandler: (e) =>
     switch e.keyCode
+      when 32 then @SpaceBar   = false
       when 39 then @RightArrow = false
       when 37 then @LeftArrow  = false
       when 38 then @UpArrow    = false
