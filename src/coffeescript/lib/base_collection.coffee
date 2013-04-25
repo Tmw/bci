@@ -7,7 +7,8 @@ module.exports = class BaseCollection
   remove: (item) ->
     index = 0
     while index < @length()
-      if @getItemAtIndex(index).get('id') is item.get('id')
+      test = @getItemAtIndex(index)
+      if test and item and test.get('id') is item.get('id')
         @removeItemAtIndex(index)
       index++
 
