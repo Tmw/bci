@@ -25,7 +25,7 @@ When this has finished you can start hacking away by running the `grunt` command
 
 To see the project in action, run:
 
-`npm server`
+`npm start`
 
 This will run a local Node (Express.io) server which serves the assets and runs a Socket.IO server for signalling purposes.
 

@@ -25,6 +25,6 @@
   },
    "scripts": {
     "postinstall": "bower install",
-    "server": "node build/server/server.js"
+    "start": "node build/server/server.js"
   }
 }
