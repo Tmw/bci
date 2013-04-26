@@ -1,55 +1,29 @@
 require 'createjs'
+ForceHelper = require '../lib/ForceHelper'
 
 module.exports = class Bullet extends createjs.Shape
-  constructor: (@ref, @stage)->
+  constructor: (@x, @y, @rotation, @stage)->
     super
     createjs.Ticker.addListener(@)
     @stage.addChild(@)
     @graphics.beginFill("#CCC").drawCircle(0, 0, 5)
-    @direction = @ref.direction
-
-    @factor   = @ref.direction.clone()
-    @rotation = @ref.rotation
-
-    @x = @ref.x
-    @y = @ref.y
 
     @speed = 15
-    @velocity = new createjs.Point(0,0)
-    @_calculateActualMovement()
+    @force = ForceHelper(@rotation, @speed)
 
   destroy: ->
     # remove from stage and remove reference in the Ticker
     @stage.removeChild(@)
     createjs.Ticker.removeListener(@) 
 
-  _calculateActualMovement: ->
-    # turn factors into actual speeds
-    if @rotation < 0 and @rotation >= -90
-      @velocity.x = 0 - @speed * @factor.x;
-      @velocity.y = 0 - @speed * @factor.y;
-    
-    else if @rotation >= 0 and @rotation <= 90
-      @velocity.x = @speed * @factor.x;
-      @velocity.y = 0 - @speed * @factor.y;
-    
-    else if @rotation >= 90 and @rotation <= 180
-      @velocity.x = @speed * @factor.x;
-      @velocity.y = @speed * @factor.y;
-    
-    else if @rotation <= -90 and @rotation >= -180
-      @velocity.x = 0- @speed * @factor.x;
-      @velocity.y = @speed * @factor.y;
-    
-    else
-      @velocity.x = @velocity.y = @speed
-
   tick: ->
     # update the actual position
-    @x += @velocity.x
-    @y += @velocity.y
+    @x += @force.x
+    @y += @force.y
 
     # dump when out of bounds
-    if @x > @stage.canvas.width or @y > @stage.canvas.height or @x < 0 or @y < 0
-      @destroy()
+    if @_outOfBounds() then @destroy()
+
+  _outOfBounds: ->
+    return @x > @stage.canvas.width or @y > @stage.canvas.height or @x < 0 or @y < 0
       
