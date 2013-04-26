@@ -18,6 +18,7 @@ module.exports = class Game extends Screen
 
     # initialize a stage
     @stage    = new createjs.Stage('canvas')
+    App.RealtimeManager.subscribe "opponent:bullet", @_handleNewOpponentBullet
 
   onShow: ->
     # create players
@@ -34,6 +35,9 @@ module.exports = class Game extends Screen
   # each tick, update the stage
   tick: => 
     if KeyboardHandler.SpaceBar
-      new Bullet(@you.x, @you.y, @you.rotation, @stage)
+      new Bullet(@you.x, @you.y, @stage).fromRotation(@you.rotation)
 
     @stage.update()
+
+  _handleNewOpponentBullet: (data) =>
+    new Bullet(data.x, data.y, @stage, false).withForce(data.force)
