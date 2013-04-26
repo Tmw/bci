@@ -112,5 +112,5 @@ module.exports = class ConnectionWrapper
 
   _createAnswer: ->
     @peerConnection.createAnswer (answer) =>
-      @handshake.sessionDescription = answer
+      @handshake.sessionDescription = @_bandwidthHack(answer)
       @peerConnection.setLocalDescription answer
