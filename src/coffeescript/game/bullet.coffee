@@ -5,8 +5,10 @@ module.exports = class Bullet extends createjs.Shape
 
   constructor: (@x, @y, @stage, @owned=true) ->
     super
-    # do something fun with the color based on the owner of the bullet..
-    @graphics.beginFill("#CCC").drawCircle(0, 0, 5)
+    
+    # setup color based on the owner
+    color = if @owned then "#CCC" else "#FC0"
+    @graphics.beginFill(color).drawCircle(0, 0, 5)
 
     # setup basic vars and calculate force
     @speed = 15
@@ -39,7 +41,7 @@ module.exports = class Bullet extends createjs.Shape
     return @x > @stage.canvas.width or @y > @stage.canvas.height or @x < 0 or @y < 0
 
   _start: ->
-    @_syncBullet()
+    @_syncBullet() if @owned
     createjs.Ticker.addListener(@)
     @stage.addChild(@)
 
