@@ -2,7 +2,7 @@ require 'createjs'
 ForceHelper     = require '../lib/ForceHelper'
 
 module.exports = class Bullet extends createjs.Shape
-
+  garbage: false
   constructor: (@x, @y, @stage, @owned=true) ->
     super
     
@@ -17,6 +17,7 @@ module.exports = class Bullet extends createjs.Shape
     # remove from stage and remove reference in the Ticker
     @stage.removeChild(@)
     createjs.Ticker.removeListener(@)
+    @garbage = true
 
   fromRotation: (rotation) ->
     @force = ForceHelper(rotation, @speed)

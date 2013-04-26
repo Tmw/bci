@@ -6,8 +6,8 @@ Opponent        = require '../game/opponent'
 Bullet          = require '../game/bullet'
 
 module.exports = class Game extends Screen
-  screen: '.game'
-
+  screen:     '.game'
+  bulletList: []
   initialize: ->
     # disconnect from socket to pull me off of the players list
     App.Socket.emit 'unsubscribe'
@@ -34,10 +34,32 @@ module.exports = class Game extends Screen
 
   # each tick, update the stage
   tick: => 
+    # do we need to spawn a new bullet?
     if KeyboardHandler.SpaceBar
-      new Bullet(@you.x, @you.y, @stage).fromRotation(@you.rotation)
+      @bulletList.push new Bullet(@you.x, @you.y, @stage).fromRotation(@you.rotation)
 
+    # udpate stage
     @stage.update()
 
+    # check bullet hits
+    @_checkBulletHit()
+
+  # we got some remote bullets
   _handleNewOpponentBullet: (data) =>
-    new Bullet(data.x, data.y, @stage, false).withForce(data.force)
+    @bulletList.push new Bullet(data.x, data.y, @stage, false).withForce(data.force)
+
+  _checkBulletHit: ->
+    # do some awesome shit 
+    for bullet in @bulletList
+      console.log  bullet.length
+      if bullet and @you.hitTest(bullet.x, bullet.y)
+        console.log 'hit!'
+        bullet.destroy()
+
+      # ready to be removed?
+      if bullet and bullet.garbage
+        index = @bulletList.indexOf(bullet)
+        @bulletList.splice(index, 1)
+
+
+
