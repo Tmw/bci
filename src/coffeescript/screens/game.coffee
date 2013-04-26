@@ -34,6 +34,6 @@ module.exports = class Game extends Screen
   # each tick, update the stage
   tick: => 
     if KeyboardHandler.SpaceBar
-      new Bullet(@you, @stage)
+      new Bullet(@you.x, @you.y, @you.rotation, @stage)
 
     @stage.update()
