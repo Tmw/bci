@@ -22,5 +22,7 @@ module.exports = class PlayerSelect extends Screen
       list.append "<li data-userid=\"#{user.get('id')}\">#{user.get('username')}</li>"
 
   _userClicked: (e) ->
+    $('#status').text "Please wait while we make a connection."
+    $('ul').hide()
     userId = $(e.currentTarget).data('userid')
     App.UserCollection.challangeUser(userId)

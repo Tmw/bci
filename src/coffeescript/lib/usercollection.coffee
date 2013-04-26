@@ -45,6 +45,9 @@ module.exports = class UserCollection extends BaseCollection
     dataobj = JSON.parse data
     c = confirm "#{dataobj.from.username} would like to challenge you. Accept?"
     if c
+      $('#status').text "Please wait while we make a connection"
+      $('ul').hide()
+      
       App.Connection.handleOffer data, (handshake) ->
         packet = JSON.stringify('user':dataobj.from, 'from': App.CurrentPlayer, 'handshake':handshake)
         App.Socket.emit 'users:challenge:finish', packet
