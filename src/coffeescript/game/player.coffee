@@ -1,6 +1,8 @@
 require 'createjs'
 KeyboardHandler = require '../lib/KeyboardHandler'
 RealtimeManager = require '../lib/RealtimeManager'
+ForceHelper     = require '../lib/ForceHelper'
+
 module.exports = class Player extends createjs.Container
   baseColor: '#000'
 
@@ -9,7 +11,7 @@ module.exports = class Player extends createjs.Container
     createjs.Ticker.addListener(@)
 
     # setup basic vars
-    @velocity  = new createjs.Point(0, 0)
+    @force     = new createjs.Point(0,0)
     @speed     = 0
 
   start: ->
@@ -56,7 +58,7 @@ module.exports = class Player extends createjs.Container
     @_animation()
 
     # only sync position if moving
-    unless @velocity.x is 0 and @velocity.y is 0 and @rotation is @prev_rotation
+    unless @force.x is 0 and @force.y is 0 and @rotation is @prev_rotation
       @_syncPosition()
 
   _animation: ->
@@ -92,50 +94,14 @@ module.exports = class Player extends createjs.Container
       if @speed > 0 then @speed -=1
       if @speed < 0 then @speed +=1
 
-    # do some fancy calculations
-    factor = new createjs.Point(0,0)
-
-    if @rotation >= 0 and @rotation <= 90
-      factor.x = @rotation / 90
-      factor.y = 1 - factor.x
-
-    else if @rotation > 90 and @rotation <= 180
-      factor.y = (@rotation - 90) / 90
-      factor.x = 1 - factor.y
-
-    else if @rotation < 0 and @rotation >= -90
-      factor.x = Math.abs(@rotation) / 90
-      factor.y = 1 - factor.x
-
-    else if @rotation < -90 and @rotation >= -180
-      factor.y = (Math.abs(@rotation)-90) / 90
-      factor.x = 1 - factor.y
-
-    else
-      factor.y = factor.x = 0
-    
-    # turn factors into actual speeds
-    if @rotation < 0 and @rotation >= -90
-      @velocity.x = 0 - @speed * factor.x;
-      @velocity.y = 0 - @speed * factor.y;
-    
-    else if @rotation >= 0 and @rotation <= 90
-      @velocity.x = @speed * factor.x;
-      @velocity.y = 0 - @speed * factor.y;
-    
-    else if @rotation >= 90 and @rotation <= 180
-      @velocity.x = @speed * factor.x;
-      @velocity.y = @speed * factor.y;
-    
-    else if @rotation <= -90 and @rotation >= -180
-      @velocity.x = 0- @speed * factor.x;
-      @velocity.y = @speed * factor.y;
-    
-    else
-      @velocity.x = @velocity.y = 0
-
-    @direction = factor
+    # calculate force in each direction
+    @force = ForceHelper(@rotation, @speed)
 
     # assign actual position
-    @x += @velocity.x
-    @y += @velocity.y
+    @x += @force.x
+    @y += @force.y
+
+
+
+
+
