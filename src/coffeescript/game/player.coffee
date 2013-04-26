@@ -69,7 +69,7 @@ module.exports = class Player extends createjs.Container
 
   _syncPosition: ->
     # broadbast position to opponent
-    App.RealtimeManager.sendLocation x:@x, y:@y, r: @rotation
+    App.RealtimeManager.sync "opponent:moved", {x:@x, y:@y, r: @rotation}
 
   _move: ->
     movement_max   = 10

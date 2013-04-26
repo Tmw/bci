@@ -5,8 +5,8 @@ module.exports = class RealtimeMananger
     @conn.setOnDataCallback @_onDataHandler
     @subscribers = {}
 
-  sendLocation: (coordinates) ->
-    @conn.send @_pack "opponent:moved", coordinates
+  sync: (event, data) ->
+    @conn.send @_pack event, data
 
   subscribe: (event, callback) ->
     @subscribers[event] = callback
