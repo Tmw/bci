@@ -102,8 +102,13 @@ module.exports = class ConnectionWrapper
 
   _createOffer: ->
     @peerConnection.createOffer (offer) =>
-      @handshake.sessionDescription = offer
+      @handshake.sessionDescription = @_bandwidthHack(offer)
       @peerConnection.setLocalDescription offer
+
+  _bandwidthHack: (sdp) ->
+    splitted = sdp.sdp.split("b=AS:30")
+    sdp.sdp = splitted[0] + "b=AS:1638400" + splitted[1]
+    return sdp
 
   _createAnswer: ->
     @peerConnection.createAnswer (answer) =>
