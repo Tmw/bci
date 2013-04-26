@@ -7,7 +7,6 @@ Bullet          = require '../game/bullet'
 
 module.exports = class Game extends Screen
   screen:     '.game'
-  bulletList: []
   initialize: ->
     # disconnect from socket to pull me off of the players list
     App.Socket.emit 'unsubscribe'
@@ -17,7 +16,8 @@ module.exports = class Game extends Screen
     createjs.Ticker.addListener(@)
 
     # initialize a stage
-    @stage    = new createjs.Stage('canvas')
+    @stage      = new createjs.Stage('canvas')
+    @bulletList = []
     App.RealtimeManager.subscribe "opponent:bullet", @_handleNewOpponentBullet
 
   onShow: ->
@@ -51,15 +51,15 @@ module.exports = class Game extends Screen
   _checkBulletHit: ->
     # do some awesome shit 
     for bullet in @bulletList
-      console.log  bullet.length
+
       if bullet and @you.hitTest(bullet.x, bullet.y)
         console.log 'hit!'
-        bullet.destroy()
+        #bullet.destroy()
 
-      # ready to be removed?
-      if bullet and bullet.garbage
-        index = @bulletList.indexOf(bullet)
-        @bulletList.splice(index, 1)
+      # # ready to be removed?
+      # if bullet and bullet.garbage
+      #   index = @bulletList.indexOf(bullet)
+      #   @bulletList.splice(index, 1)
 
 
 
