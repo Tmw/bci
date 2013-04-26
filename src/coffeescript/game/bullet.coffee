@@ -16,12 +16,14 @@ module.exports = class Bullet extends createjs.Shape
 
     @speed = 15
     @velocity = new createjs.Point(0,0)
+    @_calculateActualMovement()
 
   destroy: ->
+    # remove from stage and remove reference in the Ticker
     @stage.removeChild(@)
-    createjs.Ticker.removeListener(@)
+    createjs.Ticker.removeListener(@) 
 
-  tick: ->
+  _calculateActualMovement: ->
     # turn factors into actual speeds
     if @rotation < 0 and @rotation >= -90
       @velocity.x = 0 - @speed * @factor.x;
@@ -42,9 +44,10 @@ module.exports = class Bullet extends createjs.Shape
     else
       @velocity.x = @velocity.y = @speed
 
+  tick: ->
+    # update the actual position
     @x += @velocity.x
     @y += @velocity.y
-
 
     # dump when out of bounds
     if @x > @stage.canvas.width or @y > @stage.canvas.height or @x < 0 or @y < 0
