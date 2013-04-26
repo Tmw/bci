@@ -35,8 +35,11 @@ module.exports = class UserCollection extends BaseCollection
     @_onChangeCallback() if @_onChangeCallback
 
   _handleUserRemove: (data) =>
-    @removeWithId JSON.parse(data).id
-    @_onChangeCallback() if @_onChangeCallback
+    try
+      @removeWithId JSON.parse(data).id
+      @_onChangeCallback() if @_onChangeCallback
+    catch exception
+      console.log 'Caught exception: ', exception, data
 
   _handleChallenge: (data) =>
     dataobj = JSON.parse data
